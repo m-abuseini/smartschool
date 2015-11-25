@@ -1,0 +1,93 @@
+extends layout
+
+block content
+
+  //Wrapper
+  #wrapper
+    // school List Container
+    #userListContainer
+
+      // school LIST
+      h2 SCHOOL List
+      #schoolList
+        table
+          thead
+            th name
+            th logo
+            th email
+            th Delete ?
+            th Update ?
+          tbody
+       //  /school LIST
+     //  /school List Container
+
+
+
+    // school manipulation container
+    #schoolManipulationContainer
+
+      //SCHOOL Info
+      #schoolInfo
+      h2 School Info
+      p
+        strong Name:
+        | <span id='schoolInfoName'></span>
+        br
+        strong Age:
+        | <span id='schoolInfoemail'></span>
+        br
+        strong Gender:
+        | <span id="schoolInfoLogourl"></span>
+        br
+        strong Location
+        | <span id="schoolInfoDescription"></span>
+
+        strong password
+        | <span id="userInfoPassword"></span>
+        strong usertype
+        | <span id="userInfoType"></span>
+      //  /User Info
+
+      
+
+      // ADD school
+      h2 Add school
+
+      form#addSchool(role='form', action="/api/schools/addschool",method="post", style='max-width: 300px;', onsubmit="AJAXSubmit(this); return false;")
+
+        fieldset
+         input#inputschoolName(type='text',placeholder='Username',name='name')
+         input#inputschoolEmail(type='text',placeholder='Email',name='email')
+         br
+         input#inputUschoollogourl(type='text',placeholder='logourl',name='logourl')
+         input#inputschoolDescription(type='text',placeholder='description',name='description')
+         br
+         input#inputschoolGender(type='text',placeholder='gender',name='gender')
+         br
+         button#btnAddSchool Add school
+      //  /add User
+
+      br
+      br
+      // Edit SCHOOL
+      h2 Edit School
+      form#editUser(role='form', action="/api/schools/updateschool",method="post", style='max-width: 300px;', onsubmit="AJAXSubmit(this); return false;")
+        fieldset
+         input#schoolId(type='text',placeholder='_id',name='_id',disabled='disabled')
+         br
+         input#updateschoolName(type='text',placeholder='Username',name='name')
+         input#updateschoolEmail(type='text',placeholder='Email',name='email')
+         br
+         input#updateUschoollogourl(type='text',placeholder='logourl',name='logourl')
+         input#updateschoolDescription(type='text',placeholder='description',name='description')
+         br
+         input#updatetschoolGender(type='text',placeholder='gender',name='gender')
+         br
+         button#btnAddSchool Add school
+      //  /edit school
+    //  /school manipulation container
+
+  //  /WRAPPER
+  script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+  script(src='/javascripts/global.js')
+  script(src='/javascripts/schools.js')

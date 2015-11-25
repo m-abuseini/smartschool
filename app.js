@@ -14,6 +14,8 @@ var users = require('./routes/users');
 var schools = require('./routes/schools');
 var api = require('./routes/api');
 var login = require('./routes/login');
+var viewuserlist = require('./routes/viewuserlist');
+var viewschoollist = require('./routes/viewschoollist');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -44,6 +46,8 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 app.use('/login', login);
+app.use('/viewuserlist', viewuserlist);
+app.use('/viewschoollist', viewschoollist);
 //app.use('/partials/:name', routes.partials);
 app.use('/api', api);
 app.use('/api/users', users);
