@@ -46,10 +46,10 @@ router.delete('/deleteuser/:id',function(req,res){
 
 
 /*
-* GET  specific user
+* GET  specific user by id
 * this will not be used now as all the data is saved on javascript object. 
 */
-router.get('/getspecificuser/:id',function(req,res){
+router.get('/getspecificuserbyid/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('userlist');
 	var userToGet = req.params.id;
@@ -59,15 +59,29 @@ router.get('/getspecificuser/:id',function(req,res){
 });
 
 /*
+* GET  specific user by email
+* this to get the user for login 
+*/
+router.get('/getspecificuserbyemail/:email',function(req,res){
+	var db = req.db;
+	var collection = db.get('userlist');
+	var userToGet = req.params.email;
+	collection.findOne({email:userToGet},{}, function(e, docs){
+		res.json(docs);
+	});
+});
+
+
+/*
 * Post to update user
 */
 router.post('/updateuser',function(req,res){
 	var db = req.db;
 	var collection = db.get('userlist');
-	//console.log(collection);
+	console.log(req.body);
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){
 		res.send(
-			(err === null)?{msg: ''}:{msg: err}
+			(err === null)?{msg: ersult + ''}:{msg: err}
 		);
 	});
 });

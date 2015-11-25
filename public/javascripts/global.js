@@ -73,6 +73,8 @@ function showUserInfo(event){
 	jQuery('#userInfoAge').text(thisUserObject.age);
 	jQuery('#userInfoGender').text(thisUserObject.gender);
 	jQuery('#userInfoLocation').text(thisUserObject.location);
+	jQuery('#userInfoType').text(thisUserObject.usertype);
+	jQuery('#usernIfopassword').text(thisUserObject.password);
 
 };
 
@@ -95,7 +97,9 @@ function addUser(event){
 			'fullname': jQuery('#addUser fieldset input#inputUserFullname').val(),
 			'age': jQuery('#addUser fieldset input#inputUserAge').val(),
 			'location': jQuery('#addUser fieldset input#inputUserLocation').val(),
-			'gender': jQuery('#addUser fieldset input#inputUserGender').val()
+			'gender': jQuery('#addUser fieldset input#inputUserGender').val(),
+			'password': jQuery('#addUser fieldset input#inputUserPassword').val(),
+			'usertype': jQuery('#addUser fieldset input#inputUserType').val()
 		}
 
 		//Use Ajax to post object to our addUser service
@@ -165,6 +169,8 @@ function getUserDataToUpdate(e){
 	jQuery('#updateUserAge').val(thisUserObject.age);
 	jQuery('#updateUserGender').val(thisUserObject.gender);
 	jQuery('#updateUserLocation').val(thisUserObject.location);
+	jQuery('#updateUserPassword').val(thisUserObject.password);
+	jQuery('#updateUserType').val(thisUserObject.usertype);
 };
 
 function updateUser(e){
@@ -186,7 +192,9 @@ function updateUser(e){
 			'fullname': jQuery('#editUser fieldset input#updateUserFullname').val(),
 			'age': jQuery('#editUser fieldset input#updateUserAge').val(),
 			'location': jQuery('#editUser fieldset input#updateUserLocation').val(),
-			'gender': jQuery('#editUser fieldset input#updateUserGender').val()
+			'gender': jQuery('#editUser fieldset input#updateUserGender').val(),
+			'usertype': jQuery('#editUser fieldset input#updateUserType').val(),
+			'password': jQuery('#editUser fieldset input#updateUserPassword').val()
 		}
 
 		//Use Ajax to post object to our addUser service

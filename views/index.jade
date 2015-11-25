@@ -6,6 +6,16 @@ block content
   h1 SMART SCHOOL
   p Welcome to Smart School
 
+  if (!user)
+    a(href="/login") Login
+    br
+    a(href="/register") Register
+  if (user)
+    p You are currently logged in as #{user.username}
+    a(href="/logout") Logout
+
+
+
   //Wrapper
   #wrapper
     // User List Container
@@ -44,6 +54,11 @@ block content
         br
         strong Location
         | <span id="userInfoLocation"></span>
+
+        strong password
+        | <span id="userInfoPassword"></span>
+        strong usertype
+        | <span id="userInfoType"></span>
       //  /User Info
 
     
@@ -60,6 +75,9 @@ block content
          br
          input#inputUserLocation(type='text',placeholder='Location')
          input#inputUserGender(type='text',placeholder='gender')
+         br
+         input#inputUserPassword(type='password',placeholder='password')
+         input#inputUserType(type='text',placeholder='user type')
          br
          button#btnAddUser Add User
       //  /add User
@@ -80,6 +98,9 @@ block content
          br
          input#updateUserLocation(type='text',placeholder='Location')
          input#updateUserGender(type='text',placeholder='gender')
+         br
+         input#updateUserPassword(type='password',placeholder='password')
+         input#updateUserType(type='text',placeholder='user type')
          br
          button#btnUpdateUser Update User
       //  /add User

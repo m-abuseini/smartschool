@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/api', function(req, res, next) {
-  res.send('respond with a resource');
+  res.send('this should be a page containing all api documentation');
 });
 
 module.exports = router;
