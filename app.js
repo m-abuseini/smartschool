@@ -13,9 +13,19 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var schools = require('./routes/schools');
 var api = require('./routes/api');
+var countries = require('./routes/countries');
 var login = require('./routes/login');
+// ====
+var classes = require('./routes/classes');
+var buses = require('./routes/buses');
+var trips = require('./routes/trips');
+var addresses = require('./routes/addresses');
+var subjects = require('./routes/subjects');
+var tripsdetails = require('./routes/tripsdetails');
+// ====
 var viewuserlist = require('./routes/viewuserlist');
 var viewschoollist = require('./routes/viewschoollist');
+var viewcountrylist = require('./routes/viewcountrylist');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -48,10 +58,21 @@ app.use('/', routes);
 app.use('/login', login);
 app.use('/viewuserlist', viewuserlist);
 app.use('/viewschoollist', viewschoollist);
+app.use('/viewcountrylist', viewcountrylist);
 //app.use('/partials/:name', routes.partials);
 app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/schools', schools);
+app.use('/api/countries',countries);
+// ====
+app.use('/api/classes',classes);
+app.use('/api/buses',buses);
+app.use('/api/trips',trips);
+app.use('/api/addresses',addresses);
+app.use('/api/subjects',subjects);
+app.use('/api/tripsdetails',tripsdetails);
+// ====
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

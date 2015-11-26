@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>form setter</title>
+</head>
+<body>
+  <div id="test">
+    
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script type="text/javascript">
+  	var list = [{"_id":"5655f1af7a91c8b82f166874","username":"m","email":"m@m.com","fullname":"mahmoud","age":"1","location":"1","gender":"m","password":"123","usertype":"admin"},{"_id":"5655f1d47a91c8b82f166875","username":"m1","email":"m1@m.com","fullname":"mahmoud","age":"1","location":"2","gender":"1","password":"123","usertype":"student"},{"_id":"565617aa1577bad82ec5f548","username":"sad","email":"sadas","fullname":"dasdasd","age":"adsds","location":"dsasds","gender":"sadsd","password":"sadasd","usertype":"saddasd"}];
+
+
+	var formSetter = function(list){
+		console.log(list);
+	  var listLength = list.length;
+	  for(var i=0;i<listLength;i++){
+	  	jQuery("#test").append("============== "+i+" ==============");
+	    var form = jQuery("<form>").attr({"method":"post","role":"form"});
+	    for(var key in list[i]){
+	    	if(key === "_id"){
+	    		form.attr("id",list[i][key]);
+	    	}else{
+	    		form.append(jQuery("<input>").attr({"name":key,"value": list[i][key],"disabled":"disabled"}));
+	    		//checkFieldType();
+	    	}
+	    }
+	    form.append(jQuery("<a>").attr({"class":"deleteRecord","href":"javascript:;"}).html("Delete"));
+	    form.append(jQuery("<a>").attr({"class":"editRecord","href":"javascript:;"}).html("edit"));
+	    form.append(jQuery("<button>").attr({"class":"updateRecord"}).html("update"));
+	    // add buttons [link = update; button = update; link as button or icon = delete;]
+	    jQuery("#test").append(form);
+	    jQuery("#test").append("<br>");
+	  }
+	};
+
+	jQuery("document").ready(function(){
+	  formSetter(list);  
+	});
+
+  </script>
+</body>
+</html>

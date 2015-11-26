@@ -1,0 +1,94 @@
+extends layout
+
+block content
+
+  //Wrapper
+  #wrapper
+    // country List Container
+    #userListContainer
+
+      // country LIST
+      h2 country List
+      #countryList
+        table
+          thead
+            th name
+            th arabicname
+            th countrycode
+            th abbreviationtwoletters
+            th abbreviationthreeletters
+            th Delete ?
+            th Update ?
+          tbody
+       //  /country LIST
+     //  /country List Container
+
+
+
+    // country manipulation container
+    #countryManipulationContainer
+
+      //country Info
+      #countryInfo
+      h2 country Info
+      p
+        strong Name:
+        | <span id='countryInfoName'></span>
+        br
+        strong arabicname:
+        | <span id='countryInfoArabicName'></span>
+        br
+        strong countrycode:
+        | <span id="countryInfoCountryCode"></span>
+        br
+        strong abbreviationtwoletters:
+        | <span id="countryInfoAbbreviationTwoLetters"></span>
+        br
+        strong abbreviation three letters
+        | <span id="countryInfoAbbreviationThreeLetters"></span>
+
+      //  /country Info
+
+      
+
+      // ADD country
+      h2 Add country
+
+      form#addcountry(role='form', action="/api/countrys/addcountry",method="post", style='max-width: 300px;', onsubmit="AJAXSubmit(this); return false;")
+
+        fieldset
+         input#inputcountryName(type='text',placeholder='Username',name='name')
+         input#inputcountryArabicName(type='text',placeholder='Email',name='arabicname')
+         br
+         input#inputUcountryCountryCode(type='text',placeholder='logourl',name='countrycode')
+         input#inputcountryAbbreviationTwoLetters(type='text',placeholder='description',name='abbreviationtwoletters')
+         br
+         input#inputcountryAbbreviationThreeLetters(type='text',placeholder='gender',name='abbreviationthreeletters')
+         br
+         button#btnAddcountry Add country
+      //  /add country
+
+      br
+      br
+      // Edit country
+      h2 Edit country
+      form#editUser(role='form', action="/api/countrys/updatecountry",method="post", style='max-width: 300px;', onsubmit="AJAXSubmit(this); return false;")
+        fieldset
+         input#countryId(type='text',placeholder='_id',name='_id',disabled='disabled')
+         br
+         input#updatecountryName(type='text',placeholder='Username',name='name')
+         input#updatecountryEmail(type='text',placeholder='Email',name='email')
+         br
+         input#updateUcountrylogourl(type='text',placeholder='logourl',name='logourl')
+         input#updatecountryDescription(type='text',placeholder='description',name='description')
+         br
+         input#updatetcountryGender(type='text',placeholder='gender',name='gender')
+         br
+         button#btnAddcountry Add country
+      //  /edit country
+    //  /country manipulation container
+
+  //  /WRAPPER
+  script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+  script(src='/javascripts/global.js')
+  //script(src='/javascripts/countrys.js')
