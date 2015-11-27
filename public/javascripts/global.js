@@ -143,3 +143,173 @@ var AJAXSubmit = (function () {
 	};
 
 })();
+
+
+
+
+/*/     FORM Collector CODE     END /*/
+
+
+/*/     FORM Setter CODE     /*/
+
+var delegate = function(criteria, listener) {
+	  	return function(e) {
+		    var el = e.target;
+			    do {
+			      if (!criteria(el)) continue;
+			      e.delegateTarget = el;
+			      listener.apply(this, arguments);
+			      return;
+			    } while( (el = el.parentNode) );
+		};
+	};
+
+
+
+	var formSetter = function(){
+		var list;
+		jQuery.getJSON(formConfig.getAction,function(data){
+			list = data
+			var listLength = list.length,
+	  	  formId ;
+			  for(var i=0;i<listLength;i++){
+			  	jQuery("#wrapper").append("============== "+i+" ==============");
+			    var form = jQuery("<form>").attr({"method":"post","role":"form"});
+			    for(var key in list[i]){
+			    	if(key === "_id"){
+			    		formId = "id-"+list[i][key];
+			    		form.attr("id",formId);
+			    	}else{
+			    		form.append(jQuery("<input>").attr({"name":key,"value": list[i][key],"disabled":"disabled"}));
+			    		//checkFieldType();
+			    	}
+			    }
+
+			    var recordButtoncontainer = jQuery("<div>").attr({"class":"recordButtonContainer"});
+				    recordButtoncontainer.append(jQuery("<a>").attr({"class":"deleteRecord btn","href":"javascript:;"}).html("Delete"));
+				    recordButtoncontainer.append(jQuery("<a>").attr({"class":"editRecord btn","href":"javascript:;"}).html("edit"));
+				    recordButtoncontainer.append(jQuery("<button>").attr({"class":"updateRecord btn"}).html("update"));
+			    	// add buttons [link = update; button = update; link as button or icon = delete;]
+
+			    form.append(recordButtoncontainer);
+			    jQuery("#wrapper").append(form);
+			    
+			    formHandler.initRecord(formId,"recordButtonContainer");
+			    jQuery("#wrapper").append("<br>");
+
+			  }
+		});
+	};
+
+
+	var formHandler = {
+	
+		formNavigation : null,
+		formNavigationButtons: null,
+		formContainer : null,
+		formAvailableForms: null,
+
+		//
+		recordContainer: null,
+		recordButtonsContainer: null,
+		recordsMainContainer: null,
+
+		
+		initNavigation: function(formNav,formContainer){
+			formHandler.formNavigation = document.querySelector("#"+formNav);
+			formHandler.formNavigationButtons = document.querySelectorAll("#"+formNav+" ul li.btn");
+			formHandler.formContainer  = document.querySelector("#"+formContainer);
+			formHandler.formAvailableForms = document.querySelectorAll("#"+formContainer+" section.hidden-form");
+			
+			formHandler.initFormNavigation();
+		},
+
+		initRecord: function(rContainer,rButtonsContainer){
+			formHandler.recordContainer = document.querySelector("#"+ rContainer);
+			formHandler.recordButtonsContainer = document.querySelector("."+rButtonsContainer);
+			formHandler.recordsMainContainer = document.querySelector("#wrapper");
+			formHandler.initRecordManipulation();
+		},
+		
+		initFormNavigation: function(){
+			formHandler.formNavigation.addEventListener("click", delegate(formHandler.buttonsFilter, formHandler.navigationButtonHandler));
+		},
+
+		initRecordManipulation: function(){
+			formHandler.recordContainer.addEventListener("click", delegate(formHandler.buttonsFilter, formHandler.recordButtonHandler));
+		},
+		
+		navigationButtonHandler: function(e) {
+			var button = e.delegateTarget;
+			if(!button.classList.contains("current")){
+				[].forEach.call(formHandler.formNavigationButtons, function(el) {
+					el.classList.remove("current");
+				});
+				button.classList.add("current");
+				var formClass = button.children[0].classList;
+				formClass = formClass.toString();
+				formClass = formClass.replace(/add-form /g,'');
+				console.log(formClass);
+				[].forEach.call(formHandler.formAvailableForms, function(el) {
+					if(el.classList.contains(formClass)){
+						el.classList.add("selected");
+					}else{
+						el.classList.remove("selected");
+					}
+				});
+			}else{
+				button.classList.remove("current");
+			}
+		},
+
+		recordButtonHandler: function(e){
+			var button = e.delegateTarget;
+			if(button.classList.contains("deleteRecord")){
+				formHandler.enableDeleterecordBehavior(button);
+			}else if(button.classList.contains("editRecord")){
+				formHandler.enableEditrecordBehavior(button);
+			}else if(button.classList.contains("updateRecord")){
+				formHandler.enableUpdateRecordBehavior(button);
+			}
+		},
+		
+
+		enableDeleterecordBehavior: function(button){
+			
+			var record = button.parentElement.parentNode;
+			var recordId = record.id;
+			if(record.nodeName !== "FORM" ){return;}
+			// set a request for sending the request to delete through api
+
+				// on success of removal
+				formHandler.recordsMainContainer.removeChild(record);
+			console.log("Delete Form");
+		},
+		enableEditrecordBehavior: function(button){
+			var record = button.parentElement.parentNode;
+			var recordId = record.id;
+			for(var input in record.childNodes){
+				var child = record.childNodes[input];
+				if(child.tagName !== "INPUT"){return;}
+				child.removeAttribute("disabled");
+				var updateBtn = record.querySelector('.updateRecord');
+				updateBtn.setAttribute("style","display: inline-block");
+			}
+			//removeAttribute("disabled");
+			console.log("Edit Form");
+		},
+		enableUpdateRecordBehavior: function(button){
+			var form = button.parentElement.parentNode;
+			if(form.nodeName !== "FORM" ){return;}
+			form.setAttribute("action",formConfig.updateAction);
+			console.log("Update Form");
+		},
+
+
+		buttonsFilter: function(elem) { return elem.classList && elem.classList.contains("btn"); },
+
+}
+
+	jQuery("document").ready(function(){
+	  formSetter();
+	});

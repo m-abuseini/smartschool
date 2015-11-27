@@ -14,31 +14,160 @@
   	var list = [{"_id":"5655f1af7a91c8b82f166874","username":"m","email":"m@m.com","fullname":"mahmoud","age":"1","location":"1","gender":"m","password":"123","usertype":"admin"},{"_id":"5655f1d47a91c8b82f166875","username":"m1","email":"m1@m.com","fullname":"mahmoud","age":"1","location":"2","gender":"1","password":"123","usertype":"student"},{"_id":"565617aa1577bad82ec5f548","username":"sad","email":"sadas","fullname":"dasdasd","age":"adsds","location":"dsasds","gender":"sadsd","password":"sadasd","usertype":"saddasd"}];
 
 
+
+  	var delegate = function(criteria, listener) {
+	  	return function(e) {
+		    var el = e.target;
+			    do {
+			      if (!criteria(el)) continue;
+			      e.delegateTarget = el;
+			      listener.apply(this, arguments);
+			      return;
+			    } while( (el = el.parentNode) );
+		};
+	};
+
+
+
 	var formSetter = function(list){
 		console.log(list);
-	  var listLength = list.length;
+	  var listLength = list.length,
+	  	  formId ;
 	  for(var i=0;i<listLength;i++){
 	  	jQuery("#test").append("============== "+i+" ==============");
 	    var form = jQuery("<form>").attr({"method":"post","role":"form"});
 	    for(var key in list[i]){
 	    	if(key === "_id"){
-	    		form.attr("id",list[i][key]);
+	    		formId = "id-"+list[i][key];
+	    		form.attr("id",formId);
 	    	}else{
 	    		form.append(jQuery("<input>").attr({"name":key,"value": list[i][key],"disabled":"disabled"}));
 	    		//checkFieldType();
 	    	}
 	    }
-	    form.append(jQuery("<a>").attr({"class":"deleteRecord","href":"javascript:;"}).html("Delete"));
-	    form.append(jQuery("<a>").attr({"class":"editRecord","href":"javascript:;"}).html("edit"));
-	    form.append(jQuery("<button>").attr({"class":"updateRecord"}).html("update"));
-	    // add buttons [link = update; button = update; link as button or icon = delete;]
+
+	    var recordButtoncontainer = jQuery("<div>").attr({"class":"recordButtonContainer"});
+		    recordButtoncontainer.append(jQuery("<a>").attr({"class":"deleteRecord btn","href":"javascript:;"}).html("Delete"));
+		    recordButtoncontainer.append(jQuery("<a>").attr({"class":"editRecord btn","href":"javascript:;"}).html("edit"));
+		    recordButtoncontainer.append(jQuery("<button>").attr({"class":"updateRecord btn"}).html("update"));
+	    	// add buttons [link = update; button = update; link as button or icon = delete;]
+
+	    form.append(recordButtoncontainer);
 	    jQuery("#test").append(form);
+	    
+	    formHandler.initRecord(formId,"recordButtonContainer");
 	    jQuery("#test").append("<br>");
+
 	  }
 	};
 
+
+	var formHandler = {
+	
+		formNavigation : null,
+		formNavigationButtons: null,
+		formContainer : null,
+		formAvailableForms: null,
+
+		//
+		recordContainer: null,
+		recordButtonsContainer: null,
+
+		
+		initNavigation: function(formNav,formContainer){
+			formHandler.formNavigation = document.querySelector("#"+formNav);
+			formHandler.formNavigationButtons = document.querySelectorAll("#"+formNav+" ul li.btn");
+			formHandler.formContainer  = document.querySelector("#"+formContainer);
+			formHandler.formAvailableForms = document.querySelectorAll("#"+formContainer+" section.hidden-form");
+			
+			formHandler.initFormNavigation();
+		},
+
+		initRecord: function(rContainer,rButtonsContainer){
+			formHandler.recordContainer = document.querySelector("#"+ rContainer);
+			formHandler.recordButtonsContainer = document.querySelector("."+rButtonsContainer);
+
+			formHandler.initRecordManipulation();
+		},
+		
+		initFormNavigation: function(){
+			formHandler.formNavigation.addEventListener("click", delegate(formHandler.buttonsFilter, formHandler.navigationButtonHandler));
+		},
+
+		initRecordManipulation: function(){
+			formHandler.recordContainer.addEventListener("click", delegate(formHandler.buttonsFilter, formHandler.recordButtonHandler));
+		},
+		
+		navigationButtonHandler: function(e) {
+			var button = e.delegateTarget;
+			if(!button.classList.contains("current")){
+				[].forEach.call(formHandler.formNavigationButtons, function(el) {
+					el.classList.remove("current");
+				});
+				button.classList.add("current");
+				var formClass = button.children[0].classList;
+				formClass = formClass.toString();
+				formClass = formClass.replace(/add-form /g,'');
+				console.log(formClass);
+				[].forEach.call(formHandler.formAvailableForms, function(el) {
+					if(el.classList.contains(formClass)){
+						el.classList.add("selected");
+					}else{
+						el.classList.remove("selected");
+					}
+				});
+			}else{
+				button.classList.remove("current");
+			}
+		},
+
+		recordButtonHandler: function(e){
+			var button = e.delegateTarget;
+			if(button.classList.contains("deleteRecord")){
+				formHandler.enableDeleterecordBehavior(button);
+			}else if(button.classList.contains("editRecord")){
+				formHandler.enableEditrecordBehavior(button);
+			}else if(button.classList.contains("updateRecord")){
+				formHandler.enableUpdateRecordBehavior(button);
+			}
+		},
+		
+
+		enableDeleterecordBehavior: function(button){
+			var form = button.parentElement.parentNode;
+			if(form.nodeName !== "FORM" ){return;}
+			form.setAttribute("action",formConfig.deleteAction);
+			//formHandler.recordContainer.setAttribute("action", formConfig.deleteAction);
+			console.log("Delete Form");
+		},
+		enableEditrecordBehavior: function(button){
+			//formHandler.recordContainer.setAttribute("action", formConfig.editAction);
+			// enable the fields in this record to be editable
+			console.log("Edit Form");
+		},
+		enableUpdateRecordBehavior: function(button){
+			var form = button.parentElement.parentNode;
+			if(form.nodeName !== "FORM" ){return;}
+			form.setAttribute("action",formConfig.updateAction);
+			console.log("Update Form");
+		},
+
+
+		buttonsFilter: function(elem) { return elem.classList && elem.classList.contains("btn"); },
+
+}
+
+
+var formConfig = {
+	deleteAction : "action/to/delete",
+	updateAction : "action/to/update",
+	addAction : "action/to/add"
+}
+
 	jQuery("document").ready(function(){
-	  formSetter(list);  
+	  formSetter(list);
+
+	  //formHandler.initNavigation("submit-forms-nav","form-container");
 	});
 
   </script>
