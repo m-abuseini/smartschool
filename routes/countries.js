@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET countrylist
 */
-router.get('/countrylist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('coutrylist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/countrylist',function(req,res){
 /*
 * Post to add country
 */
-router.post('/addcountry',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('coutrylist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addcountry',function(req,res){
 /*
 * DELETE to deletecountry
 */
-router.delete('/deletecountry/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('coutrylist');
 	var countryToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecificcountrybyid/:id',function(req,res){
 /*
 * Post to update country
 */
-router.post('/updatecountry',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('coutrylist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

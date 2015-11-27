@@ -9,7 +9,7 @@ var router = express.Router();
 /**
 * GET User LIST
 */
-router.get('/userlist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('userlist');
 	//console.log(collection);
@@ -21,7 +21,7 @@ router.get('/userlist',function(req,res){
 /*
 * Post to addUser
 */
-router.post('/adduser',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('userlist');
 	//console.log(collection);
@@ -35,7 +35,7 @@ router.post('/adduser',function(req,res){
 /*
 * DELETE to deleteuser
 */
-router.delete('/deleteuser/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('userlist');
 	var userToDelete = req.params.id;
@@ -75,7 +75,7 @@ router.get('/getspecificuserbyemail/:email',function(req,res){
 /*
 * Post to update user
 */
-router.post('/updateuser',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('userlist');
 	console.log(req.body);

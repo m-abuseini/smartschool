@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET tripdetaillist
 */
-router.get('/tripdetaillist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('tripdetaillist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/tripdetaillist',function(req,res){
 /*
 * Post to add tripdetail
 */
-router.post('/addtripdetail',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('tripdetaillist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addtripdetail',function(req,res){
 /*
 * DELETE to deletetripdetail
 */
-router.delete('/deletetripdetail/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('tripdetaillist');
 	var tripdetailToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecifictripdetailbyid/:id',function(req,res){
 /*
 * Post to update tripdetail
 */
-router.post('/updatetripdetail',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('tripdetaillist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

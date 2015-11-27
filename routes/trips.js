@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET triplist
 */
-router.get('/triplist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('triplist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/triplist',function(req,res){
 /*
 * Post to add trip
 */
-router.post('/addtrip',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('triplist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addtrip',function(req,res){
 /*
 * DELETE to deletetrip
 */
-router.delete('/deletetrip/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('triplist');
 	var tripToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecifictripbyid/:id',function(req,res){
 /*
 * Post to update trip
 */
-router.post('/updatetrip',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('triplist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

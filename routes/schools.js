@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET schoollist
 */
-router.get('/schoollist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('schoollist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/schoollist',function(req,res){
 /*
 * Post to add school
 */
-router.post('/addschool',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('schoollist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addschool',function(req,res){
 /*
 * DELETE to deleteschool
 */
-router.delete('/deleteschool/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('schoollist');
 	var schoolToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecificschoolbyid/:id',function(req,res){
 /*
 * Post to update school
 */
-router.post('/updateschool',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('schoollist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

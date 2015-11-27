@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET addresslist
 */
-router.get('/addresslist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('addresslist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/addresslist',function(req,res){
 /*
 * Post to add address
 */
-router.post('/addaddress',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('addresslist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addaddress',function(req,res){
 /*
 * DELETE to deleteaddress
 */
-router.delete('/deleteaddress/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('addresslist');
 	var addressToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecificaddressbyid/:id',function(req,res){
 /*
 * Post to update address
 */
-router.post('/updateaddress',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('addresslist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

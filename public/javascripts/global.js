@@ -167,6 +167,9 @@ var delegate = function(criteria, listener) {
 
 
 	var formSetter = function(){
+		while (formHandler.formContainer.firstChild) {
+		    formHandler.formContainer.removeChild(formHandler.formContainer.firstChild);
+		}
 		var list;
 		jQuery.getJSON(formConfig.getAction,function(data){
 			list = data
@@ -179,8 +182,17 @@ var delegate = function(criteria, listener) {
 			    	if(key === "_id"){
 			    		formId = "id-"+list[i][key];
 			    		form.attr("id",formId);
+			    		form.append(jQuery("<input>").attr({
+			    			"name":key,
+			    			"value": list[i][key],
+			    			"disabled":"disabled",
+			    			"type": "text"
+			    			,"style":"display:none"
+			    		}));
 			    	}else{
-			    		form.append(jQuery("<input>").attr({"name":key,"value": list[i][key],"disabled":"disabled"}));
+			    		//should add type based on field type
+			    		//for now all fields are text
+			    		form.append(jQuery("<input>").attr({"name":key,"value": list[i][key],"disabled":"disabled","type": "text"}));
 			    		//checkFieldType();
 			    	}
 			    }
@@ -193,11 +205,12 @@ var delegate = function(criteria, listener) {
 
 			    form.append(recordButtoncontainer);
 			    jQuery("#wrapper").append(form);
-			    
-			    formHandler.initRecord(formId,"recordButtonContainer");
-			    jQuery("#wrapper").append("<br>");
-
+			  	formHandler.initRecord(formId,"recordButtonContainer");  
 			  }
+			  
+			  jQuery("#wrapper").append("<br>");
+			  var addRecordButton = jQuery("<a>").attr({"href":"javascript:;","class": "addRecordButton"}).html("add");
+			  jQuery("#wrapper").append(addRecordButton);
 		});
 	};
 
@@ -219,7 +232,7 @@ var delegate = function(criteria, listener) {
 			formHandler.formNavigation = document.querySelector("#"+formNav);
 			formHandler.formNavigationButtons = document.querySelectorAll("#"+formNav+" ul li.btn");
 			formHandler.formContainer  = document.querySelector("#"+formContainer);
-			formHandler.formAvailableForms = document.querySelectorAll("#"+formContainer+" section.hidden-form");
+			//formHandler.formAvailableForms = document.querySelectorAll("#"+formContainer+" section.hidden-form");
 			
 			formHandler.initFormNavigation();
 		},
@@ -227,7 +240,7 @@ var delegate = function(criteria, listener) {
 		initRecord: function(rContainer,rButtonsContainer){
 			formHandler.recordContainer = document.querySelector("#"+ rContainer);
 			formHandler.recordButtonsContainer = document.querySelector("."+rButtonsContainer);
-			formHandler.recordsMainContainer = document.querySelector("#wrapper");
+			formHandler.recordsMainContainer = formHandler.formContainer;
 			formHandler.initRecordManipulation();
 		},
 		
@@ -246,23 +259,28 @@ var delegate = function(criteria, listener) {
 					el.classList.remove("current");
 				});
 				button.classList.add("current");
-				var formClass = button.children[0].classList;
-				formClass = formClass.toString();
-				formClass = formClass.replace(/add-form /g,'');
-				console.log(formClass);
-				[].forEach.call(formHandler.formAvailableForms, function(el) {
-					if(el.classList.contains(formClass)){
-						el.classList.add("selected");
-					}else{
-						el.classList.remove("selected");
-					}
-				});
+				var navItemClassList = button.children[0].classList;
+				// [].forEach.call(formHandler.formAvailableForms, function(el) {
+				// 	if(el.classList.contains(navItemClassList)){
+				// 		el.classList.add("selected");
+				// 	}else{
+				// 		el.classList.remove("selected");
+				// 	}
+				// });
+				if(navItemClassList.contains("users")){
+					viewsManipulation.usersView();
+				}else if(navItemClassList.contains("countries")){
+					viewsManipulation.countriesView();
+				}else if(navItemClassList.contains("schools")){
+					viewsManipulation.schoolsView();
+				}
 			}else{
 				button.classList.remove("current");
 			}
 		},
 
 		recordButtonHandler: function(e){
+			e.preventDefault();
 			var button = e.delegateTarget;
 			if(button.classList.contains("deleteRecord")){
 				formHandler.enableDeleterecordBehavior(button);
@@ -275,16 +293,14 @@ var delegate = function(criteria, listener) {
 		
 
 		enableDeleterecordBehavior: function(button){
-			
 			var record = button.parentElement.parentNode;
 			var recordId = record.id;
 			if(record.nodeName !== "FORM" ){return;}
-			// set a request for sending the request to delete through api
-
-				// on success of removal
-				formHandler.recordsMainContainer.removeChild(record);
+			// formHandler delete method / accepts PARAM of record
+			formHandler.deleteRecordFunc(record);
 			console.log("Delete Form");
 		},
+
 		enableEditrecordBehavior: function(button){
 			var record = button.parentElement.parentNode;
 			var recordId = record.id;
@@ -298,18 +314,123 @@ var delegate = function(criteria, listener) {
 			//removeAttribute("disabled");
 			console.log("Edit Form");
 		},
+
 		enableUpdateRecordBehavior: function(button){
 			var form = button.parentElement.parentNode;
 			if(form.nodeName !== "FORM" ){return;}
 			form.setAttribute("action",formConfig.updateAction);
+			AJAXSubmit(form);
 			console.log("Update Form");
+		},
+
+		deleteRecordFunc: function(record){
+			var dbId = record.id;
+			dbId = dbId.substring(3);
+			jQuery.ajax({
+				type: 'DELETE',
+				url: formConfig.deleteAction+'/'+dbId
+			}).done(function(response){
+				if(response.msg === ''){
+					// on success of removal
+					formHandler.recordsMainContainer.removeChild(record);
+				}else{
+					alert('error = '+ response.msg);
+				}
+			});
 		},
 
 
 		buttonsFilter: function(elem) { return elem.classList && elem.classList.contains("btn"); },
 
-}
+	}
+
+
+	var formConfig = {};
+
+
+
+    var viewsManipulation = {
+
+    	usersView: function(){
+		    formConfig.getAction = "api/users/list";
+		    formConfig.deleteAction = "api/users/delete";
+		    formConfig.updateAction = "api/users/update";
+		    formConfig.addAction = "api/users/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	countriesView: function(){
+    		formConfig.getAction = "api/countries/list";
+		    formConfig.deleteAction = "api/countries/delete";
+		    formConfig.updateAction = "api/countries/update";
+		    formConfig.addAction = "api/countries/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	schoolsView: function(){
+    		formConfig.getAction = "api/schools/list";
+		    formConfig.deleteAction = "api/schools/delete";
+		    formConfig.updateAction = "api/schools/update";
+		    formConfig.addAction = "api/schools/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	finalAct: function(){
+    		formSetter();
+    	}
+    	
+    }
+
+    var bindAddrecordButton = function(){
+    	jQuery("#wrapper").on("click",".addRecordButton",function(e){
+    		e.preventDefault();
+    		var newRecord;
+    		for(var ele in formHandler.recordsMainContainer.childNodes){
+    			if(formHandler.recordsMainContainer.childNodes[ele].nodeName === "FORM"){
+    				newRecord = formHandler.recordsMainContainer.childNodes[ele].cloneNode(true);
+    				break;
+    			}
+    		}
+    		manipulateAddedRecord(newRecord);
+    	});
+    }
+
+    var manipulateAddedRecord = function(record){
+    	record.removeAttribute("id");
+    	record.setAttribute("action",formConfig.addAction);
+    	var recordchildrenLength = record.childNodes.length;
+    	for(var input=0;input<recordchildrenLength;input++){
+    		// check first field why its not being populated right
+    		if(record.childNodes[input] === undefined ){continue;}
+    		if(record.childNodes[input].tagName === "INPUT"){
+    			record.childNodes[input].removeAttribute("disabled");
+    			record.childNodes[input].removeAttribute("value");
+    		}
+    		if(record.childNodes[input].name === "_id"){
+    			record.removeChild(record.childNodes[input]);
+    			//record.childNodes[input].remove();
+    		}else if(record.childNodes[input].classList.length > 0 && record.childNodes[input].classList.contains("recordButtonContainer")){
+    			while (record.childNodes[input].firstChild) {
+				    record.childNodes[input].removeChild(record.childNodes[input].firstChild);
+				}
+				var addButton = document.createElement("button");
+				addButton.setAttribute("class","btn addRecord");
+				addButton.setAttribute("onsubmit","AJAXSubmit(this);return false;"); 
+				var textNode = document.createTextNode("save");
+				addButton.appendChild(textNode);
+				record.childNodes[input].appendChild(addButton);
+    		}
+    	}
+    	var addRecordButton = document.querySelector(".addRecordButton");
+    	formHandler.recordsMainContainer.insertBefore(record,addRecordButton);
+    }
 
 	jQuery("document").ready(function(){
-	  formSetter();
+		// navigation requires #navigationcontainer[id], #formContainer[id]
+		formHandler.initNavigation("forms-navigation","wrapper");
+	  	//formSetter();
+	  	bindAddrecordButton();
 	});

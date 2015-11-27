@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET classlist
 */
-router.get('/classlist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('classlist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/classlist',function(req,res){
 /*
 * Post to add class
 */
-router.post('/addclass',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('classlist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addclass',function(req,res){
 /*
 * DELETE to deleteclass
 */
-router.delete('/deleteclass/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('classlist');
 	var classToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecificclassbyid/:id',function(req,res){
 /*
 * Post to update class
 */
-router.post('/updateclass',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('classlist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

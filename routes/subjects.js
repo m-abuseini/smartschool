@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET subjectlist
 */
-router.get('/subjectlist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('subjectlist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/subjectlist',function(req,res){
 /*
 * Post to add subject
 */
-router.post('/addsubject',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('subjectlist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addsubject',function(req,res){
 /*
 * DELETE to deletesubject
 */
-router.delete('/deletesubject/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('subjectlist');
 	var subjectToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecificsubjectbyid/:id',function(req,res){
 /*
 * Post to update subject
 */
-router.post('/updatesubject',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('subjectlist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){

@@ -4,7 +4,7 @@ var router = express.Router();
 /**
 * GET buslist
 */
-router.get('/buslist',function(req,res){
+router.get('/list',function(req,res){
 	var db = req.db;
 	var collection = db.get('buslist');
 	collection.find({},{},function(e,docs){
@@ -17,7 +17,7 @@ router.get('/buslist',function(req,res){
 /*
 * Post to add bus
 */
-router.post('/addbus',function(req,res){
+router.post('/add',function(req,res){
 	var db = req.db;
 	var collection = db.get('buslist');
 	collection.insert(req.body, function(err, ersult){
@@ -30,7 +30,7 @@ router.post('/addbus',function(req,res){
 /*
 * DELETE to deletebus
 */
-router.delete('/deletebus/:id',function(req,res){
+router.delete('/delete/:id',function(req,res){
 	var db = req.db;
 	var collection = db.get('buslist');
 	var busToDelete = req.params.id;
@@ -58,7 +58,7 @@ router.get('/getspecificbusbyid/:id',function(req,res){
 /*
 * Post to update bus
 */
-router.post('/updatebus',function(req,res){
+router.post('/update',function(req,res){
 	var db = req.db;
 	var collection = db.get('buslist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){
