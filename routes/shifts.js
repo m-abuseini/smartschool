@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 /**
-* GET countrylist
+* GET shiftlist
 */
 router.get('/list',function(req,res){
 	var db = req.db;
-	var collection = db.get('countrylist');
+	var collection = db.get('shiftlist');
 	collection.find({},{},function(e,docs){
 		res.json(docs);
 	});
@@ -15,11 +15,11 @@ router.get('/list',function(req,res){
 
 
 /*
-* Post to add country
+* Post to add shift
 */
 router.post('/add',function(req,res){
 	var db = req.db;
-	var collection = db.get('countrylist');
+	var collection = db.get('shiftlist');
 	collection.insert(req.body, function(err, ersult){
 		res.send(
 			(err === null)?{msg: ''}:{msg: err}
@@ -28,25 +28,25 @@ router.post('/add',function(req,res){
 });
 
 /*
-* DELETE to deletecountry
+* DELETE to delete shift
 */
 router.delete('/delete/:id',function(req,res){
 	var db = req.db;
-	var collection = db.get('countrylist');
-	var countryToDelete = req.params.id;
-	collection.remove({'_id': countryToDelete},function(err){
+	var collection = db.get('shiftlist');
+	var provinceToDelete = req.params.id;
+	collection.remove({'_id': provinceToDelete},function(err){
 		res.send((err === null) ? {msg : ''} : {msg : 'error = '+ err});
 	});
 });
 
 
 /*
-* GET  specific country by id
+* GET  specific shift by id
 * this will not be used now as all the data is saved on javascript object. on the browser.
 */
-router.get('/getspecificcountrybyid/:id',function(req,res){
+router.get('/getspecificshiftbyid/:id',function(req,res){
 	var db = req.db;
-	var collection = db.get('countrylist');
+	var collection = db.get('shiftlist');
 	var userToGet = req.params.id;
 	collection.findOne({_id:userToGet},{}, function(e, docs){
 		res.json(docs);
@@ -56,11 +56,11 @@ router.get('/getspecificcountrybyid/:id',function(req,res){
 
 
 /*
-* Post to update country
+* Post to update shift
 */
 router.post('/update',function(req,res){
 	var db = req.db;
-	var collection = db.get('countrylist');
+	var collection = db.get('shiftlist');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){
 		res.send(
 			(err === null)?{msg: ''}:{msg: err}

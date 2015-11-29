@@ -9,20 +9,35 @@ var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/smartschool');
 
+
 var routes = require('./routes/index');
+var login = require('./routes/login');
+
+//============ --- API ROUTES -----
+var api = require('./routes/api');
+// --------
 var users = require('./routes/users');
 var schools = require('./routes/schools');
-var api = require('./routes/api');
 var countries = require('./routes/countries');
-var login = require('./routes/login');
-// ====
 var classes = require('./routes/classes');
 var buses = require('./routes/buses');
 var trips = require('./routes/trips');
 var addresses = require('./routes/addresses');
 var subjects = require('./routes/subjects');
-var tripsdetails = require('./routes/tripsdetails');
-// ====
+var languages = require('./routes/languages');
+var cities = require('./routes/cities');
+var province = require('./routes/province');
+var sections = require('./routes/sections');
+var personaldocuments = require('./routes/personaldocuments');
+var educationaldocuments = require('./routes/educationaldocuments');
+var parents = require('./routes/parents');
+var students = require('./routes/students');
+var teachers = require('./routes/teachers');
+var shifts = require('./routes/shifts');
+var roles = require('./routes/roles');
+var privilages = require('./routes/privilages');
+//var tripsdetails = require('./routes/tripsdetails');
+//============ --- API ROUTES ----- ---------------------- //
 var viewuserlist = require('./routes/viewuserlist');
 var viewschoollist = require('./routes/viewschoollist');
 var viewcountrylist = require('./routes/viewcountrylist');
@@ -60,18 +75,30 @@ app.use('/viewuserlist', viewuserlist);
 app.use('/viewschoollist', viewschoollist);
 app.use('/viewcountrylist', viewcountrylist);
 //app.use('/partials/:name', routes.partials);
+//============ --- API URL STRUCT -----
 app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/schools', schools);
 app.use('/api/countries',countries);
-// ====
 app.use('/api/classes',classes);
 app.use('/api/buses',buses);
 app.use('/api/trips',trips);
 app.use('/api/addresses',addresses);
 app.use('/api/subjects',subjects);
-app.use('/api/tripsdetails',tripsdetails);
-// ====
+app.use('/api/languages',languages);
+app.use('/api/cities',cities);
+app.use('/api/province',province);
+app.use('/api/sections',sections);
+app.use('/api/personaldocuments',personaldocuments);
+app.use('/api/educationaldocuments',educationaldocuments);
+app.use('/api/parents',parents);
+app.use('/api/students',students);
+app.use('/api/teachers',teachers);
+app.use('/api/shifts',shifts);
+app.use('/api/roles',roles);
+app.use('/api/privilages',privilages);
+//app.use('/api/tripsdetails',tripsdetails);
+//============ --- API URL STRUCT ----- -------//
 
 
 // catch 404 and forward to error handler

@@ -267,12 +267,45 @@ var delegate = function(criteria, listener) {
 				// 		el.classList.remove("selected");
 				// 	}
 				// });
-				if(navItemClassList.contains("users")){
-					viewsManipulation.usersView();
+
+				if(navItemClassList.contains("languages")){
+					viewsManipulation.languagesView();
 				}else if(navItemClassList.contains("countries")){
 					viewsManipulation.countriesView();
+				}else if(navItemClassList.contains("cities")){
+					viewsManipulation.citiesView();
+				}else if(navItemClassList.contains("province")){
+					viewsManipulation.provinceView();
+				}else if(navItemClassList.contains("addresses")){
+					viewsManipulation.addressesView();
 				}else if(navItemClassList.contains("schools")){
 					viewsManipulation.schoolsView();
+				}else if(navItemClassList.contains("classes")){
+					viewsManipulation.classesView();
+				}else if(navItemClassList.contains("sections")){
+					viewsManipulation.sectionsView();
+				}else if(navItemClassList.contains("subjects")){
+					viewsManipulation.subjectsView();
+				}else if(navItemClassList.contains("personaldocuments")){
+					viewsManipulation.personaldocumentsView();
+				}else if(navItemClassList.contains("educationaldocuments")){
+					viewsManipulation.educationaldocumentsView();
+				}else if(navItemClassList.contains("parents")){
+					viewsManipulation.parentsView();
+				}else if(navItemClassList.contains("students")){
+					viewsManipulation.studentsView();
+				}else if(navItemClassList.contains("teachers")){
+					viewsManipulation.teachersView();
+				}else if(navItemClassList.contains("trips")){
+					viewsManipulation.tripsView();
+				}else if(navItemClassList.contains("shifts")){
+					viewsManipulation.shiftsView();
+				}else if(navItemClassList.contains("buses")){
+					viewsManipulation.busesView();
+				}else if(navItemClassList.contains("roles")){
+					viewsManipulation.rolesView();
+				}else if(navItemClassList.contains("privilages")){
+					viewsManipulation.privilagesView();
 				}
 			}else{
 				button.classList.remove("current");
@@ -288,10 +321,18 @@ var delegate = function(criteria, listener) {
 				formHandler.enableEditrecordBehavior(button);
 			}else if(button.classList.contains("updateRecord")){
 				formHandler.enableUpdateRecordBehavior(button);
+			}else if(button.classList.contains("addRecord")){
+				formHandler.enableAddeRecordBehavior(button);
 			}
 		},
 		
-
+		enableAddeRecordBehavior: function(button){
+			var form = button.parentElement.parentNode;
+			if(form.nodeName !== "FORM" ){return;}
+			form.setAttribute("action",formConfig.addAction);
+			AJAXSubmit(form);
+			console.log("add button Form");
+		},
 		enableDeleterecordBehavior: function(button){
 			var record = button.parentElement.parentNode;
 			var recordId = record.id;
@@ -378,6 +419,165 @@ var delegate = function(criteria, listener) {
 		    viewsManipulation.finalAct();
     	},
 
+    	languagesView: function(){
+		    formConfig.getAction = "api/languages/list";
+		    formConfig.deleteAction = "api/languages/delete";
+		    formConfig.updateAction = "api/languages/update";
+		    formConfig.addAction = "api/languages/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	citiesView: function(){
+    		formConfig.getAction = "api/cities/list";
+		    formConfig.deleteAction = "api/cities/delete";
+		    formConfig.updateAction = "api/cities/update";
+		    formConfig.addAction = "api/cities/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	provinceView: function(){
+    		formConfig.getAction = "api/province/list";
+		    formConfig.deleteAction = "api/province/delete";
+		    formConfig.updateAction = "api/province/update";
+		    formConfig.addAction = "api/province/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+
+
+    	addressesView: function(){
+		    formConfig.getAction = "api/addresses/list";
+		    formConfig.deleteAction = "api/addresses/delete";
+		    formConfig.updateAction = "api/addresses/update";
+		    formConfig.addAction = "api/addresses/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	classesView: function(){
+    		formConfig.getAction = "api/classes/list";
+		    formConfig.deleteAction = "api/classes/delete";
+		    formConfig.updateAction = "api/classes/update";
+		    formConfig.addAction = "api/classes/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	sectionsView: function(){
+    		formConfig.getAction = "api/sections/list";
+		    formConfig.deleteAction = "api/sections/delete";
+		    formConfig.updateAction = "api/sections/update";
+		    formConfig.addAction = "api/sections/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	subjectsView: function(){
+    		formConfig.getAction = "api/subjects/list";
+		    formConfig.deleteAction = "api/subjects/delete";
+		    formConfig.updateAction = "api/subjects/update";
+		    formConfig.addAction = "api/subjects/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+
+
+    	personaldocumentsView: function(){
+		    formConfig.getAction = "api/personaldocuments/list";
+		    formConfig.deleteAction = "api/personaldocuments/delete";
+		    formConfig.updateAction = "api/personaldocuments/update";
+		    formConfig.addAction = "api/personaldocuments/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	educationaldocumentsView: function(){
+    		formConfig.getAction = "api/educationaldocuments/list";
+		    formConfig.deleteAction = "api/educationaldocuments/delete";
+		    formConfig.updateAction = "api/educationaldocuments/update";
+		    formConfig.addAction = "api/educationaldocuments/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	parentsView: function(){
+    		formConfig.getAction = "api/parents/list";
+		    formConfig.deleteAction = "api/parents/delete";
+		    formConfig.updateAction = "api/parents/update";
+		    formConfig.addAction = "api/parents/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	studentsView: function(){
+		    formConfig.getAction = "api/students/list";
+		    formConfig.deleteAction = "api/students/delete";
+		    formConfig.updateAction = "api/students/update";
+		    formConfig.addAction = "api/students/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	teachersView: function(){
+    		formConfig.getAction = "api/teachers/list";
+		    formConfig.deleteAction = "api/teachers/delete";
+		    formConfig.updateAction = "api/teachers/update";
+		    formConfig.addAction = "api/teachers/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	tripsView: function(){
+    		formConfig.getAction = "api/trips/list";
+		    formConfig.deleteAction = "api/trips/delete";
+		    formConfig.updateAction = "api/trips/update";
+		    formConfig.addAction = "api/trips/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+
+
+    	shiftsView: function(){
+		    formConfig.getAction = "api/shifts/list";
+		    formConfig.deleteAction = "api/shifts/delete";
+		    formConfig.updateAction = "api/shifts/update";
+		    formConfig.addAction = "api/shifts/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	busesView: function(){
+    		formConfig.getAction = "api/buses/list";
+		    formConfig.deleteAction = "api/buses/delete";
+		    formConfig.updateAction = "api/buses/update";
+		    formConfig.addAction = "api/buses/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	rolesView: function(){
+    		formConfig.getAction = "api/roles/list";
+		    formConfig.deleteAction = "api/roles/delete";
+		    formConfig.updateAction = "api/roles/update";
+		    formConfig.addAction = "api/roles/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
+    	privilagesView: function(){
+    		formConfig.getAction = "api/privilages/list";
+		    formConfig.deleteAction = "api/privilages/delete";
+		    formConfig.updateAction = "api/privilages/update";
+		    formConfig.addAction = "api/privilages/add";
+
+		    viewsManipulation.finalAct();
+    	},
+
     	finalAct: function(){
     		formSetter();
     	}
@@ -400,10 +600,10 @@ var delegate = function(criteria, listener) {
 
     var manipulateAddedRecord = function(record){
     	record.removeAttribute("id");
-    	record.setAttribute("action",formConfig.addAction);
+    	record.setAttribute("id","new-record");
+    	//record.setAttribute("action",formConfig.addAction);
     	var recordchildrenLength = record.childNodes.length;
     	for(var input=0;input<recordchildrenLength;input++){
-    		// check first field why its not being populated right
     		if(record.childNodes[input] === undefined ){continue;}
     		if(record.childNodes[input].tagName === "INPUT"){
     			record.childNodes[input].removeAttribute("disabled");
@@ -411,6 +611,7 @@ var delegate = function(criteria, listener) {
     		}
     		if(record.childNodes[input].name === "_id"){
     			record.removeChild(record.childNodes[input]);
+    			input --;
     			//record.childNodes[input].remove();
     		}else if(record.childNodes[input].classList.length > 0 && record.childNodes[input].classList.contains("recordButtonContainer")){
     			while (record.childNodes[input].firstChild) {
@@ -418,7 +619,7 @@ var delegate = function(criteria, listener) {
 				}
 				var addButton = document.createElement("button");
 				addButton.setAttribute("class","btn addRecord");
-				addButton.setAttribute("onsubmit","AJAXSubmit(this);return false;"); 
+				//addButton.setAttribute("onsubmit","e.preventDefault();AJAXSubmit(this);return false;"); 
 				var textNode = document.createTextNode("save");
 				addButton.appendChild(textNode);
 				record.childNodes[input].appendChild(addButton);
@@ -426,6 +627,7 @@ var delegate = function(criteria, listener) {
     	}
     	var addRecordButton = document.querySelector(".addRecordButton");
     	formHandler.recordsMainContainer.insertBefore(record,addRecordButton);
+    	formHandler.initRecord("new-record","recordButtonContainer");  
     }
 
 	jQuery("document").ready(function(){
