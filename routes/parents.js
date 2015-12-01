@@ -1,3 +1,4 @@
+var ParentModel = require('./model/Parent');
 var express = require('express');
 var router = express.Router();
 
@@ -26,6 +27,13 @@ router.post('/add',function(req,res){
 		);
 	});
 });
+
+exports.add = function(req,res){
+
+}
+
+
+
 
 /*
 * DELETE to delete parent

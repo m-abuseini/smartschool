@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  
+  #wrapper
+
+
+    #userContainer
+
+    #mapContainer
+
+  script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+  
+  script(src='/javascripts/gmaps.js')
+  script(src='/javascripts/mapManipulation.js')
+  script.
+    var createMap = function(){
+    map = new GMaps({
+      div: '#mapContainer',
+      zoom: 16,
+      lat: 31.978467043996375,
+      lng: 35.890319645404816,
+      click: function(e) {
+        alert('click');
+      },
+      dragend: function(e) {
+        alert('dragend');
+      }
+    });
+    };
+    jQuery(document).ready(function(){createMap()});
+

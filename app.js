@@ -7,10 +7,12 @@ var bodyParser = require('body-parser');
 // Database
 var mongo = require('mongodb');
 var monk = require('monk');
+var mongoose = require('mongoose');
 var db = monk('localhost:27017/smartschool');
 
 
 var routes = require('./routes/index');
+var map = require('./routes/map');
 var login = require('./routes/login');
 
 //============ --- API ROUTES -----
@@ -54,7 +56,10 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+//to remove below after dev
 app.use(logger('dev'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -64,13 +69,27 @@ app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req,res,next){
-  req.db = db;
+// app.use(function(req,res,next){
+//   req.db = db;
+//   next();
+// });
+
+app.use(function(req,res,next) {
+  mongoose.connect("mongodb:localhost:27017/smartschool");
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function callback () {
+    console.log('DB initialised successfully');
+    app.locals.db = db;
+  });
   next();
 });
 
+
+
 app.use('/', routes);
 app.use('/login', login);
+app.use('/map',map);
 app.use('/viewuserlist', viewuserlist);
 app.use('/viewschoollist', viewschoollist);
 app.use('/viewcountrylist', viewcountrylist);

@@ -66,3 +66,9 @@ fieldset {
 	border:0;
 	padding:0; margin:0;
 }
+
+
+
+
+/* MAp test*/
+#mapContainer{height: 500px;background: blue;}
