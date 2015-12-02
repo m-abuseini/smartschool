@@ -1,8 +1,13 @@
 var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var expressSession = require('express-session');
-var LocalStrategy = require('passport-local').Strategy;
+var router  = express.Router();
+var User    = require('../models/user');
+var Parent  = require('../models/parent');
+var jwt     = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var app     = express();
+var config  = require('../config');
+app.set('superSecret', config.secret); // secret variable
+
+
 
 /* GET login Page */
 router.get('/', function(req, res, next) {
@@ -10,73 +15,47 @@ router.get('/', function(req, res, next) {
   //res.render("../views/index.html");
 });
 
-
-/*
-* Post Login Service
-*/
-router.post('/',
-	passport.authenticate('local',{
-		successRedirect: '/loginSuccess',
-		successRedirect: '/loginFailure',
-		failureFlash: false
-}));
-
-router.get('/loginFailure', function(req, res, next) {
-  res.send('Failed to authenticate');
-});
-
-router.get('/loginSuccess', function(req, res, next) {
-  res.send('Successfully authenticated');
-});
-
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(user, done) {
-	 User.findById(id, function(err, user) {
-  		done(null, user);
+router.post('/',function(req, res){
+	User.findOne({
+		email : req.body.email
+	},function(err,user){
+		if(err) throw err;
+		if(!user){
+			res.json({success: false,message: 'User not found'});
+		}else if(user){
+			if(user.password != req.body.password){
+				res.json({success: false, message: 'wrong pasword'});
+			}else{
+				var token = jwt.sign(user, app.get('superSecret'),{
+					expiresInMinutes: 1440
+				});
+				switch(user.type){
+					case "parent":
+						//instead of static id should use refid
+						Parent.findOne({_id:"565f22ce97f0c5284fb25e6e"}, function(err,user){
+							if(err) throw err;
+							res.json({
+								success: true,
+								message: 'success',
+								token: token,
+								user: user
+							});
+						});
+						break;
+					default:
+						res.json({
+							success: true,
+							message: 'success',
+							token: token,
+							user: user
+						});
+				}
+			}
+		}
 	});
 });
 
-// passport.use(new LocalStrategy(function(email, password, done) {
-// 	process.nextTick(function() {
-// 		User.findOne({email:email},function(err,User){
-// 			if (err) { return done(err); }
-// 			if (!user) {
-// 				return done(null, false, { message: 'Incorrect username.' });
-// 			}
-// 			if (!user.validPassword(password)) {
-// 				return done(null, false, { message: 'Incorrect password.' });
-// 			}
-// 			return done(null, user);
-// 		});
-// 		// Auth Check Logic
-// 	});
-// }));
 
-passport.use('/login',new LocalStrategy({
-		usernameField: 'email',
-		passReqToCallback : true	
-	},
-	function(req, email, password, done) {
-		console.log(email);
-    	console.log(password);
-		var db = req.db;
-		var collection = db.get('userlist');
-		collection.findOne({ email: email }, function (err, user) {
-			if (err) { return done(err); }
-			if (!user) {
-				console.log("user not found");
-			    return done(null, false, { message: 'Incorrect email.' });
-			}
-			if (!user.validPassword(password)) {
-			    return done(null, false, { message: 'Incorrect password.' });
-			}
-			  return done(null, user);
-		});
-	}
-));
+
 
 module.exports = router;

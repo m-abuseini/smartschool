@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var User   = require('../models/user');
+var Parent   = require('../models/parent');
+
 
 /* GET users listing. */
 // router.get('/', function(req, res, next) {
@@ -9,21 +12,56 @@ var router = express.Router();
 /**
 * GET User LIST
 */
+// router.get('/list',function(req,res){
+// 	var db = req.db;
+// 	var collection = db.get('userlist');
+// 	//console.log(collection);
+// 	collection.find({},{},function(e,docs){
+// 		res.json(docs);
+// 	});
+// });
+
+
+/**
+* GET User LIST
+*/
 router.get('/list',function(req,res){
-	var db = req.db;
-	var collection = db.get('userlist');
-	//console.log(collection);
-	collection.find({},{},function(e,docs){
-		res.json(docs);
-	});
+	User.find({}, function(err, users) {
+    	res.json(users);
+  	});
 });
+
+
+
+
+// app.get('/setup',function(req,res){
+//   var newuser = new User({
+//     name: "mahmoud", 
+//       password: "123", 
+//       type: "parent",
+//       refid: "id_123",
+//       email: "parent@zlious.com" 
+//   });
+
+//   newuser.save(function(err){
+//     if(err) throw err;
+
+//     console.log("user added");
+//     res.json({success: true});
+//   });
+// });
+
+
+
+
+
 
 /*
 * Post to addUser
 */
 router.post('/add',function(req,res){
 	var db = req.db;
-	var collection = db.get('userlist');
+	var collection = db.get('users');
 	//console.log(collection);
 	collection.insert(req.body, function(err, ersult){
 		res.send(
@@ -37,7 +75,7 @@ router.post('/add',function(req,res){
 */
 router.delete('/delete/:id',function(req,res){
 	var db = req.db;
-	var collection = db.get('userlist');
+	var collection = db.get('users');
 	var userToDelete = req.params.id;
 	collection.remove({'_id': userToDelete},function(err){
 		res.send((err === null) ? {msg : ''} : {msg : 'error = '+ err});
@@ -51,7 +89,7 @@ router.delete('/delete/:id',function(req,res){
 */
 router.get('/getspecificuserbyid/:id',function(req,res){
 	var db = req.db;
-	var collection = db.get('userlist');
+	var collection = db.get('users');
 	var userToGet = req.params.id;
 	collection.findOne({_id:userToGet},{}, function(e, docs){
 		res.json(docs);
@@ -64,7 +102,7 @@ router.get('/getspecificuserbyid/:id',function(req,res){
 */
 router.get('/getspecificuserbyemail/:email',function(req,res){
 	var db = req.db;
-	var collection = db.get('userlist');
+	var collection = db.get('users');
 	var userToGet = req.params.email;
 	collection.findOne({email:userToGet},{}, function(e, docs){
 		res.json(docs);
@@ -77,7 +115,7 @@ router.get('/getspecificuserbyemail/:email',function(req,res){
 */
 router.post('/update',function(req,res){
 	var db = req.db;
-	var collection = db.get('userlist');
+	var collection = db.get('users');
 	console.log(req.body);
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){
 		res.send(

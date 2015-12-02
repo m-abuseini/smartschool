@@ -2,18 +2,24 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('./config'); // get our config file
 // Database
 var mongo = require('mongodb');
 var monk = require('monk');
 var mongoose = require('mongoose');
-var db = monk('localhost:27017/smartschool');
-
+var db = monk(config.database);
 
 var routes = require('./routes/index');
 var map = require('./routes/map');
+
+// authentication and user login
 var login = require('./routes/login');
+
+var User   = require('./models/user');
+var Parent   = require('./models/parent');
+// authentication and user login -----
 
 //============ --- API ROUTES -----
 var api = require('./routes/api');
@@ -54,6 +60,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
@@ -62,20 +69,20 @@ app.use(logger('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(cookieParser());
+ app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(expressSession({secret: 'mySecretKey'}));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(expressSession({secret: 'mySecretKey'}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-// app.use(function(req,res,next){
-//   req.db = db;
-//   next();
-// });
+app.use(function(req,res,next){
+  req.db = db;
+  next();
+});
 
 app.use(function(req,res,next) {
-  mongoose.connect("mongodb:localhost:27017/smartschool");
+  mongoose.connect("mongodb://"+config.database);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function callback () {
@@ -84,7 +91,6 @@ app.use(function(req,res,next) {
   });
   next();
 });
-
 
 
 app.use('/', routes);

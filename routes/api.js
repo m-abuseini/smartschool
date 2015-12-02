@@ -1,9 +1,38 @@
 var express = require('express');
 var router = express.Router();
+var User   = require('../models/user');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var app = express();
+var config = require('../config');
+app.set('superSecret', config.secret); // secret variable
+
+
 
 /* GET users listing. */
 router.get('/api', function(req, res, next) {
   res.send('this should be a page containing all api documentation');
+});
+
+router.use(function(req,res,next){
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	if(token){
+
+		jwt.verify(token, app.get('superSecret'), function(err, decoded){
+			if(err){
+				return res.json({success: false, message: 'failed to authenticate token'});
+			}else{
+				res.decoded = decoded;
+				//console.log(next);
+				next();
+			}
+		});
+	}else{
+
+		return res.status(403).send({
+			success: false,
+			message: 'no token was provided'
+		});
+	}
 });
 
 module.exports = router;
