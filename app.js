@@ -26,10 +26,17 @@ var api = require('./routes/api');
 // --------
 var users = require('./routes/users');
 var schools = require('./routes/schools');
-var countries = require('./routes/countries');
-var classes = require('./routes/classes');
+var parents = require('./routes/parents');
+var students = require('./routes/students');
+var addresses = require('./routes/addresses');
+var drop_points = require('./routes/drop_points');
+var pickup_points = require('./routes/pickup_points');
 var buses = require('./routes/buses');
 var trips = require('./routes/trips');
+
+
+var countries = require('./routes/countries');
+var classes = require('./routes/classes');
 var addresses = require('./routes/addresses');
 var subjects = require('./routes/subjects');
 var languages = require('./routes/languages');
@@ -38,8 +45,7 @@ var province = require('./routes/province');
 var sections = require('./routes/sections');
 var personaldocuments = require('./routes/personaldocuments');
 var educationaldocuments = require('./routes/educationaldocuments');
-var parents = require('./routes/parents');
-var students = require('./routes/students');
+
 var teachers = require('./routes/teachers');
 var shifts = require('./routes/shifts');
 var roles = require('./routes/roles');
@@ -104,11 +110,17 @@ app.use('/viewcountrylist', viewcountrylist);
 app.use('/api', api);
 app.use('/api/users', users);
 app.use('/api/schools', schools);
-app.use('/api/countries',countries);
-app.use('/api/classes',classes);
+app.use('/api/students',students);
+app.use('/api/parents',parents);
+app.use('/api/addresses',addresses);
+app.use('/api/pickup_points', pickup_points);
+app.use('/api/drop_points', drop_points);
 app.use('/api/buses',buses);
 app.use('/api/trips',trips);
-app.use('/api/addresses',addresses);
+
+
+app.use('/api/countries',countries);
+app.use('/api/classes',classes);
 app.use('/api/subjects',subjects);
 app.use('/api/languages',languages);
 app.use('/api/cities',cities);
@@ -116,8 +128,6 @@ app.use('/api/province',province);
 app.use('/api/sections',sections);
 app.use('/api/personaldocuments',personaldocuments);
 app.use('/api/educationaldocuments',educationaldocuments);
-app.use('/api/parents',parents);
-app.use('/api/students',students);
 app.use('/api/teachers',teachers);
 app.use('/api/shifts',shifts);
 app.use('/api/roles',roles);

@@ -1,16 +1,63 @@
 var express = require('express');
 var router = express.Router();
+var Address   = require('../models/address');
+
 
 /**
 * GET addresslist
 */
 router.get('/list',function(req,res){
 	var db = req.db;
-	var collection = db.get('addresslist');
+	var collection = db.get('addresses');
 	collection.find({},{},function(e,docs){
 		res.json(docs);
 	});
 });
+
+
+
+
+
+
+
+router.get('/setup',function(req,res){
+  var newAddress = new Address({
+	language:   "1",
+	country_id: "address_country_id",
+	city_id:   'address_city_id',
+	pickup_points:  [
+		{
+			name: "home",
+			pickup_point_id: "",
+			primary: true
+	    }
+	],
+    drop_points:  [
+    	{
+			name: "home",
+			drop_point_id: "",
+			primary: true
+	    }
+    ]
+  });
+
+  newAddress.save(function(err){
+    if(err) throw err;
+	    console.log("address Added ");
+	    res.json({success: true}, message: "address added successfully");
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -19,7 +66,7 @@ router.get('/list',function(req,res){
 */
 router.post('/add',function(req,res){
 	var db = req.db;
-	var collection = db.get('addresslist');
+	var collection = db.get('addresses');
 	collection.insert(req.body, function(err, ersult){
 		res.send(
 			(err === null)?{msg: ''}:{msg: err}
@@ -32,7 +79,7 @@ router.post('/add',function(req,res){
 */
 router.delete('/delete/:id',function(req,res){
 	var db = req.db;
-	var collection = db.get('addresslist');
+	var collection = db.get('addresses');
 	var addressToDelete = req.params.id;
 	collection.remove({'_id': addressToDelete},function(err){
 		res.send((err === null) ? {msg : ''} : {msg : 'error = '+ err});
@@ -46,7 +93,7 @@ router.delete('/delete/:id',function(req,res){
 */
 router.get('/getspecificaddressbyid/:id',function(req,res){
 	var db = req.db;
-	var collection = db.get('addresslist');
+	var collection = db.get('addresses');
 	var addressToGet = req.params.id;
 	collection.findOne({_id:addressToGet},{}, function(e, docs){
 		res.json(docs);
@@ -60,7 +107,7 @@ router.get('/getspecificaddressbyid/:id',function(req,res){
 */
 router.post('/update',function(req,res){
 	var db = req.db;
-	var collection = db.get('addresslist');
+	var collection = db.get('addresses');
 	collection.findAndModify({_id:req.body._id},{$set : req.body}, function(err, ersult){
 		res.send(
 			(err === null)?{msg: ''}:{msg: err}

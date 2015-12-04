@@ -124,4 +124,30 @@ router.post('/update',function(req,res){
 	});
 });
 
+
+
+
+router.post('/updateuser/:id',function(req,res){
+	var userToGet = req.params.id;
+	User.findOne({_id: userToGet},function(err,user){
+		console.log(user);
+		if(user){
+			user.remove(function(err){
+				if(err) throw err;
+
+				res.json({success: true});
+			})
+			// user.refid = "565f22ce97f0c5284fb25e6e"
+			// user.save(function(err){
+			// 	if(err) throw err;
+			// 	res.json({success: true});
+			// });			
+		}else{
+			console.log("user not found");
+		}
+	});
+});
+
+
+
 module.exports = router;

@@ -13,7 +13,7 @@ module.exports = mongoose.model('Parent', new Schema({
   religion:   String,
   nationality: String,
   gender:   String,
-  addresses:  Array,
+  address:  String,
   children: Array,
   roles:  Array,
   social_status: String,
@@ -21,7 +21,16 @@ module.exports = mongoose.model('Parent', new Schema({
   work:   String,
   family_members_count: String,
   phone:  String,
-  email: String
+  email: String,
+  device_id: String
 }));
 
+
+// children:  [{
+//       child_id : String,
+//       full_name: String,
+//       class: String,
+//       address: String,
+//       schhold_id: String
+//     },.....]
 //var Parent = mongoose.model('Parent', parentSchema);
