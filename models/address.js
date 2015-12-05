@@ -6,8 +6,19 @@ module.exports = mongoose.model('Address', new Schema({
   country_id:  String,
   city_id:  String,
   pickup_points: Array,
-  drop_points: Array
+  drop_points: Array,
+  static_address: {}
 }));
+
+
+// static_address: {
+// name: "home",
+// 	province_id: "address_province_id",
+// 	street_name: "Qatri ben fujaa",
+// 	building_number: "7",
+// 	latitude: String,
+// 	longitude: String
+// }
 
 
 // pickup_point:  [{

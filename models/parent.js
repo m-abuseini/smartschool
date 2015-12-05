@@ -9,7 +9,7 @@ module.exports = mongoose.model('Parent', new Schema({
   middle_name: String,
   lastname:   String,
   place_of_birth:   String,
-  date_of_birth:  Date,
+  date_of_birth:  String,
   religion:   String,
   nationality: String,
   gender:   String,

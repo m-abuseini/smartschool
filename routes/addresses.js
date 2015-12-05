@@ -20,43 +20,34 @@ router.get('/list',function(req,res){
 
 
 
-router.get('/setup',function(req,res){
-  var newAddress = new Address({
-	language:   "1",
-	country_id: "address_country_id",
-	city_id:   'address_city_id',
-	pickup_points:  [
-		{
-			name: "home",
-			pickup_point_id: "",
-			primary: true
-	    }
-	],
-    drop_points:  [
-    	{
-			name: "home",
-			drop_point_id: "",
-			primary: true
-	    }
-    ]
-  });
+// router.get('/setup',function(req,res){
+//   var newAddress = new Address({
+// 	language:   "1",
+// 	country_id: "address_country_id",
+// 	city_id:   'address_city_id',
+// 	pickup_points:  [
+// 		{
+// 			name: "work",
+// 			pickup_point_id: "5662d65ca097c294661b64f8",
+// 			primary: true
+// 	    }
+// 	],
+//     drop_points:  [
+//     	{
+// 			name: "work",
+// 			drop_point_id: "5662d603e62c68ec57fd961e",
+// 			primary: true
+// 	    }
+//     ],
+//     static_address: {}
+//   });
 
-  newAddress.save(function(err){
-    if(err) throw err;
-	    console.log("address Added ");
-	    res.json({success: true}, message: "address added successfully");
-  });
-});
-
-
-
-
-
-
-
-
-
-
+//   newAddress.save(function(err){
+//     if(err) throw err;
+// 	    console.log("address Added ");
+// 	    res.json({success: true, message: "address added successfully"});
+//   });
+// });
 
 
 

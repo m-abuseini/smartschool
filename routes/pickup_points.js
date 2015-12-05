@@ -17,25 +17,46 @@ router.get('/list',function(req,res){
 
 
 
-router.get('/setup',function(req,res){
-  var newPickup_point = new Pickup_point({
-	name: "home",
-	student_id: "student_id",
-	province_id: "address_province_id",
-	street_name: "Qatri ben fujaa",
-	building_number: "7",
-	appartment_number: "1",
-	latitude : "31.978268",
-	longitude: "35.890762",
-	primary: true
-  });
+// router.get('/setup',function(req,res){
+//   var newPickup_point = new Pickup_point({
+// 	name: "home",
+// 	student_id: "student_id",
+// 	province_id: "address_province_id",
+// 	street_name: "Qatri ben fujaa",
+// 	building_number: "7",
+// 	appartment_number: "1",
+// 	latitude : "31.971961",
+// 	longitude: "35.832494",
+// 	primary: true
+//   });
 
-  newPickup_point.save(function(err){
-    if(err) throw err;
-	    console.log("Pickup_point Added ");
-	    res.json({success: true}, message: "Pickup_point added successfully");
-  });
-});
+//   newPickup_point.save(function(err){
+//     if(err) throw err;
+// 	    console.log("Pickup_point Added ");
+// 	    res.json({success: true, message: "Pickup_point added successfully"});
+//   });
+// });
+
+
+// router.get('/setup',function(req, res){
+// 	// get a user with ID of 1
+// 	Pickup_point.findById("5662d65ca097c294661b64f8", function(err, pickup_point) {
+// 	  if (err) throw err;
+
+// 	  // change the users location
+// 	  pickup_point.student_id = "5662e291079127605bae8585";
+
+// 	  // save the user
+// 	  pickup_point.save(function(err) {
+// 	    if (err) throw err;
+
+// 	    console.log('Pickup_point successfully updated!');
+// 	    res.json({success: true});
+// 	  });
+
+// 	});
+// });
+
 
 
 /*

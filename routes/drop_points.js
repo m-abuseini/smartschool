@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var drop_point = require('../models/drop_point');
+var Drop_point = require('../models/drop_point');
 
 
 /**
@@ -17,26 +17,44 @@ router.get('/list',function(req,res){
 
 
 
-router.get('/setup',function(req,res){
-  var newdrop_point = new drop_point({
-	name: "home",
-	student_id: "student_id",
-	province_id: "address_province_id",
-	street_name: "Qatri ben fujaa",
-	building_number: "7",
-	appartment_number: "1",
-	latitude : "31.978268",
-	longitude: "35.890762",
-	primary: true
-  });
+// router.get('/setup',function(req,res){
+//   var newdrop_point = new Drop_point({
+// 	name: "work",
+// 	student_id: "student_id",
+// 	province_id: "address_province_id",
+// 	street_name: "Al shaeb",
+// 	building_number: "9",
+// 	appartment_number: "2",
+// 	latitude : "31.971961",
+// 	longitude: "35.832494",
+// 	primary: true
+//   });
 
-  newdrop_point.save(function(err){
-    if(err) throw err;
-	    console.log("drop_point Added ");
-	    res.json({success: true}, message: "drop_point added successfully");
-  });
-});
+//   newdrop_point.save(function(err){
+//     if(err) throw err;
+// 	    console.log("drop_point Added ");
+// 	    res.json({success: true, message: "drop_point added successfully"});
+//   });
+// });
 
+// router.get('/setup',function(req, res){
+// 	// get a user with ID of 1
+// 	Drop_point.findById("5662d603e62c68ec57fd961e", function(err, drop_point) {
+// 	  if (err) throw err;
+
+// 	  // change the users location
+// 	  drop_point.student_id = "5662e291079127605bae8585";
+
+// 	  // save the user
+// 	  drop_point.save(function(err) {
+// 	    if (err) throw err;
+
+// 	    console.log('drop_point successfully updated!');
+// 	    res.json({success: true});
+// 	  });
+
+// 	});
+// });
 
 /*
 * Post to add drop_points

@@ -1,4 +1,4 @@
-\// user_type = 2
+// user_type = 2
 var express = require('express');
 var router = express.Router();
 var Student = require('../models/student');
@@ -15,59 +15,77 @@ router.get('/list',function(req,res){
 	});
 });
 
-router.get('/setup',function(req,res){
-  var newStudent = new Student({
-	language:   "1",
-	national_id: "1",
-	photo: "",
-	personal_documents:  ["id_1",'id_2'],
-	first_name:   'mahmoud',
-	middle_name: 'student',
-	lastname:   'student',
-	place_of_birth: "amman jordan",
-	date_of_birth:  new Date(),
-	religion:   "1",
-	nationality: "1",
-	gender: "1",
-	addresse: "id_1",
-	parents:  ["565f22ce97f0c5284fb25e6e"],
-	roles:   ["id_1",'id_2'],
-	order_in_family: "1",
-	health_status: "1",
-	education_status: "1",
-	failure_reasons: "1",
-	financial_aid_type: "1",
-	family_income: "1",
-	relief_card_status: "1",
-	social_status: "1",
-	family_members_count:  "1",
-	school: "school_id_1",
-	class: "class_id_1",
-	section: "section_is_1",
-	educational_documents: ["id_1",'id_2'],
-	phone:   "1",
-	email: "student2@zlious.com"
-	device_id: "student-device_id"
-  });
+// router.get('/setup',function(req,res){
+//   var newStudent = new Student({
+// 	language:   "1",
+// 	national_id: "1",
+// 	photo: "photo_url",
+// 	personal_documents:  ["id_1",'id_2'],
+// 	first_name:   'work student',
+// 	middle_name: 'student',
+// 	lastname:   'student',
+// 	place_of_birth: "amman jordan",
+// 	date_of_birth:  "new Date",
+// 	religion:   "1",
+// 	nationality: "1",
+// 	gender: "1",
+// 	address: "5662dd21b93eb6f4677a106e",
+// 	parents:  [],
+// 	roles:   ["id_1",'id_2'],
+// 	order_in_family: "1",
+// 	health_status: "1",
+// 	education_status: "1",
+// 	failure_reasons: "1",
+// 	financial_aid_type: "1",
+// 	family_income: "1",
+// 	relief_card_status: "1",
+// 	social_status: "1",
+// 	family_members_count:  "1",
+// 	school: "school_id_1",
+// 	class: "class_id_1",
+// 	section: "section_is_1",
+// 	educational_documents: ["id_1",'id_2'],
+// 	phone:   "1",
+// 	email: "student2@zlious.com",
+// 	device_id: "student-device_id"
+//   });
 
-  newStudent.save(function(err){
-    if(err) throw err;
+//   newStudent.save(function(err){
+//     if(err) throw err;
 
-    var newuser = new User({
-	    name: newStudent.first_name, 
-		password: "123", 
-		type: "student",
-		refid: newStudent._id,
-		email: newStudent.email
-	  });
-	  newuser.save(function(err){
-	    if(err) throw err;
+//     var newuser = new User({
+// 	    name: newStudent.first_name, 
+// 		password: "123", 
+// 		type: 2,
+// 		refid: newStudent._id,
+// 		email: newStudent.email
+// 	  });
+// 	  newuser.save(function(err){
+// 	    if(err) throw err;
 
-	    console.log("user added");
-	    res.json({success: true});
-	  });
-  });
-});
+// 	    console.log("user added");
+// 	    res.json({success: true, user: newStudent});
+// 	  });
+//   });
+// });
+
+// router.get('/setup',function(req, res){
+// 	// get a user with ID of 1
+// 	Student.findById("5662e291079127605bae8585", function(err, student) {
+// 	  if (err) throw err;
+
+// 	  // change the users location
+// 	  student.parents.push("5662e5ef591f97106f69d336");
+
+// 	  // save the user
+// 	  student.save(function(err) {
+// 	    if (err) throw err;
+
+// 	    console.log('Student successfully updated!');
+// 	  });
+
+// 	});
+// });
 
 
 /*

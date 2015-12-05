@@ -11,7 +11,7 @@ module.exports = mongoose.model('Drop_point', new Schema({
   appartment_number: String,
   latitude : String,
   longitude: String,
-  primary: boolean
+  primary: Boolean
 }));
 
 

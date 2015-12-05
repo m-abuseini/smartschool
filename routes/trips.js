@@ -31,7 +31,7 @@ router.get('/setup',function(req,res){
   newTrip.save(function(err){
     if(err) throw err;
 	    console.log("newTrip Added ");
-	    res.json({success: true}, message: "newTrip added successfully");
+	    res.json({success: true, message: "newTrip added successfully"});
   });
 });
 

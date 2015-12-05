@@ -31,7 +31,7 @@ router.post('/',function(req, res){
 					expiresInMinutes: 1440
 				});
 				switch(user.type){
-					case 1:
+					case "1":
 						//instead of static id should use refid
 						Parent.findOne({_id:user.refid}, function(err,user){
 							if(err) throw err;
@@ -45,7 +45,7 @@ router.post('/',function(req, res){
 						//res.redirect('/map/'+id);
 						break;
 
-					case 2:
+					case "2":
 						Student.findOne({_id:user.refid}, function(err,user){
 							if(err) throw err;
 							res.json({

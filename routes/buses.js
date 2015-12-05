@@ -1,3 +1,4 @@
+// user_type = 3
 var express = require('express');
 var router = express.Router();
 var Bus = require('../models/bus');
