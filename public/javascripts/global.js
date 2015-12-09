@@ -630,9 +630,733 @@ var delegate = function(criteria, listener) {
     	formHandler.initRecord("new-record","recordButtonContainer");  
     }
 
-	jQuery("document").ready(function(){
-		// navigation requires #navigationcontainer[id], #formContainer[id]
-		formHandler.initNavigation("forms-navigation","wrapper");
-	  	//formSetter();
-	  	bindAddrecordButton();
-	});
+	// jQuery("document").ready(function(){
+	// 	// navigation requires #navigationcontainer[id], #formContainer[id]
+	// 	formHandler.initNavigation("forms-navigation","wrapper");
+	//   	//formSetter();
+	//   	bindAddrecordButton();
+	// });
+
+
+
+
+
+var storage = (function() {
+    
+    var localStorageTest = function() {
+        var test = "test";
+        try {
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+                return true;
+        } catch (e) {
+            return false;
+        }
+    };
+    
+    var getCookie = function(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(name) == 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    };
+    
+    var createSingleCookie = function(cName, value) {
+        var expireCookie = new Date();
+        var expireTime = expireCookie.getTime();
+        expireTime += 60 * 60 * 100000000;
+        expireCookie.setTime(expireTime);
+        //document.cookie = cName + " = "+ value +"; expires="+expireCookie.toGMTString() +";domain = '"+getPath.hostName()+"' ; path = /";
+        document.cookie = cName + " = " + value + "; expires=" + expireCookie.toGMTString() + "; path = /";
+    };
+    
+    var deleteSingleCookie = function(cname) {
+        var expiry = new Date();
+        expiry.setTime(10);
+        document.cookie = cname + '=; expiry= ' + expiry + '; path=/';
+    };
+    
+    var setLocalStorageItem = function(name, value) {
+        localStorage.setItem(name, value);
+    };
+    
+    var getLocalStorageItem = function(name) {
+        return localStorage.getItem(name);
+    };
+    
+    var removeLocalStorageItem = function(name) {
+        localStorage.removeItem(name);
+    };
+
+    var storeItem = function(name, value){
+        if(localStorageTest()){
+            setLocalStorageItem(name, value);
+        }else{
+            createSingleCookie(name, value);
+        }
+    };
+
+    var fetchItem = function(name){
+        if(localStorageTest()){
+            return getLocalStorageItem(name);
+        }else{
+            return getCookie(name);
+        }
+    };
+
+    var deleteItem = function(name){
+         if(localStorageTest()){
+            removeLocalStorageItem(name);
+        }else{
+            deleteSingleCookie(name);
+        }
+    }
+
+
+    return {
+        storeItem: function(name, value){
+            storeItem(name, value);
+        },
+
+        fetchItem: function(name){
+            return fetchItem(name);
+        },
+
+        deleteItem: function(name){
+            deleteItem(name);
+        },
+
+        getCookie: function(cookieName) {
+            return getCookie(cookieName);
+        },
+        
+        createCookie: function(cookieName, cookieValue) {
+            createSingleCookie(cookieName, cookieValue);
+        },
+        
+        deleteCookie: function(cookieName) {
+            deleteSingleCookie(cookieName);
+        },
+
+        // checkLocalStorage: function() {
+        //     return localStorageTest();
+        // },
+        
+        // setLocalStorage: function(localStorageName, localStorageValue) {
+        //     setLocalStorageItem(localStorageName, localStorageValue);
+        // },
+        
+        // getLocalStorage: function(localStorageName) {
+        //     return getLocalStorageItem(localStorageName);
+        // },
+        
+        // removeLocalStorage: function(localStorageName) {
+        //     removeLocalStorageItem(localStorageName);
+        // }
+    };
+})();
+
+
+
+
+
+
+
+
+var getPath = {
+  /**
+    http://www.zlious.com:8080/index.html#tab2?foo=789
+
+    Property    Result
+    -------------------------------------------
+    host        www.zlious.com:8080
+    hostname    www.zlious.com
+    port        8080
+    protocol    http:
+    pathname    index.html
+    href        http://www.zlious.com:8080/index.html#tab2
+    hash        #tab2
+    search      ?foo=789
+  */
+  
+    host: function() {
+    return jQuery(location).attr('host');
+  },
+  
+    hostName: function() {
+    return jQuery(location).attr('hostname');
+  },
+  
+    port: function() {
+    return jQuery(location).attr('port');
+  },
+  
+    protocol: function() {
+    return jQuery(location).attr('protocol');
+  },
+  
+    pathName: function() {
+    return jQuery(location).attr('pathname');
+  },
+  
+    href: function() {
+    return jQuery(location).attr('href');
+  },
+  
+    hash: function() {
+    return jQuery(location).attr('hash');
+  },
+  
+  search: function() {
+    return jQuery(location).attr('search');
+  }
+
+  // redirectTo: function(url){
+  // 	window.locaion = getPath.host() + "/"+ url;
+  // }
+}
+
+
+
+
+
+/**********************************
+***********************************
+requestHandler to handle requests
+***********************************
+***********************************/
+
+var requestHandler = (function() {
+    var APIservice = "",
+        requestMethod = "",
+        token = "";
+        
+    var requestHandlerConfig = {
+        "domain": getPath.protocol() + "//" + getPath.host() + "/",
+        "login": "login/",
+        "getAddress":"api/addresses/getaddress",
+        "getDropPoint": "api/drop_points/getdroppoint",
+        "getPickupPoint": "api/pickup_points/getpickuppoint",
+        "addDropPoint" : "api/drop_points/add",
+        "addPickupPoint" : "api/pickup_points/add"
+    };
+    
+    var sendRequest = function(payload, headers ,sCallback, fCallback, arg) {
+        var request = jQuery.ajax({
+            url: requestHandlerConfig.domain + "" + APIservice + "?" + rand(),
+            data: payload,
+            contentType: "application/json; charset=utf-8",
+            method: requestMethod,
+            async: true,
+            cache: false,
+            beforeSend: function(xhr) {
+                if (checkForToken()) {
+                    token = JSON.parse(storage.fetchItem("token"));
+                    xhr.setRequestHeader("x-access-token", token);
+                }
+                for (var header in headers) {
+                    xhr.setRequestHeader(header, headers[header]);
+                }
+            }
+        });
+        request.done(function(response) {
+            handleRequestSuccess(response, sCallback, arg);
+            return false;
+        });
+        
+        request.fail(function(response) {
+            handleRequestErrors(response, fCallback);
+        });
+        
+    };
+    
+    
+    var handleRequestErrors = function(response, fCallback) {
+        alert(response);
+        fCallback(response);
+    };
+    
+    var handleRequestSuccess = function(response, sCallback, arg) {
+        sCallback(response, arg);
+    };
+    
+    var checkForToken = function() {
+        var storageValue = "";
+        
+        storageValue = storage.fetchItem("token");
+        if (storageValue != "" && storageValue != null) {
+        	token = storageValue;
+            return true;	
+        }else{
+        	token = "";
+        	return false;
+        }
+
+    };
+    
+        
+    return {
+        sendRequest: function(service, method, sCallback, fCallback, payload, headers, arg) {
+            APIservice = requestHandlerConfig[service];
+            requestMethod = method;
+            sendRequest(payload, headers, sCallback, fCallback, arg);
+        },
+        
+        checkUsersToken: function() {
+            return checkForToken();
+        }
+    };
+})();
+
+
+
+function rand() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+
+var login = {
+
+	init: function(){
+
+		login.bindButtonsAction();
+	},
+
+	bindButtonsAction: function(){
+		jQuery('a#submitLogin').on('click',function(e){
+			e.preventDefault();
+			login.submitLogin();
+		});
+	},
+
+	submitLogin: function(){
+		var payload = {},
+		emailField = jQuery('#loginEmail').val(),
+		passwordField = jQuery('#loginPassword').val();
+
+		if(emailField.length <= 0 || passwordField.length <= 0 ){
+			alert("all fields should have data");
+			return;
+		}
+		payload.email = emailField;
+		payload.password = passwordField;
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('login','POST',login.success,login.fail, payload);
+	},
+
+	success: function(response){
+		console.log(response);
+		storage.storeItem('token', JSON.stringify(response.token));
+		storage.storeItem('user', JSON.stringify(response.user));
+		//getPath.redirectTo("map");
+		//res.redirect("/map");
+		jQuery(".container").empty();
+		parent.init();
+
+	},
+	fail: function(response){
+		alert('check console for errors');
+		console.log(response);
+	}
+}
+
+var parent = {
+
+	init: function(){
+		parent.drawChildrenInfo();
+	},
+
+	bindButtonsAction: function(){
+		jQuery(".container").on('click','a.childItemAnchor',function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var childAddress = _this.parentNode.getAttribute("child-address");
+			var childId = _this.parentNode.getAttribute("child-id");
+			jQuery(".childrenList .childItem").removeClass("active");
+			_this.parentNode.classList.add("active");
+			jQuery(".childInfo").empty();
+			if(storage.fetchItem("address_"+childId) == undefined || storage.fetchItem("address_"+childId) == ""){
+				child.getAddress(childAddress,childId);
+			}else{
+				child.markAddresses(JSON.parse(storage.fetchItem("address_"+childId)));
+			}
+		});
+	},
+
+
+	drawChildrenInfo: function(){
+		var parentObj = JSON.parse(storage.fetchItem("user")),
+			childrenObj = parentObj.children;
+
+		var childrenList = jQuery("<ul>").addClass("childrenList");
+		for(var i=0;i<childrenObj.length;i++){
+			var childrenItem = jQuery("<li>").attr({"child-address":childrenObj[i].address,"child-id":childrenObj[i].child_id,"class": "childItem"});
+			childrenItem.append(jQuery("<a>").attr({"href":"javascript:;","class":"childItemAnchor"}).html(childrenObj[i].full_name));
+			childrenList.append(childrenItem);
+		}
+		jQuery(".container").append(childrenList);
+		jQuery(".container").append(jQuery("<div>").addClass("childInfo"));
+		parent.bindButtonsAction();
+	}
+};
+
+
+var child = {
+	getAddress: function(address_id, child_id){
+		var payload = 'id='+address_id,
+			headers = {},
+			arg = child_id;
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('getAddress','GET',child.addressSuccess,child.addressFail, payload, headers,arg);
+	},
+
+	addressSuccess: function(response,arg){
+		storage.storeItem('address_'+arg, JSON.stringify(response.address));
+		console.log(response.address);
+		child.markAddresses(response.address);
+	},
+
+	addressFail: function(response){
+		console.log(response);
+	},
+
+	markAddresses: function(addressObj){
+		var pickupPoints = addressObj.pickup_points,
+			dropPoints = addressObj.drop_points;
+			
+		if(dropPoints.length > 0){
+			jQuery(".childInfo").append(jQuery("<a>").attr({"href":"javascript:;","class":"drop_points"}).html("drop points"));
+		}
+
+		if(pickupPoints.length > 0){
+			jQuery(".childInfo").append(jQuery("<a>").attr({"href":"javascript:;","class":"pickup_points"}).html("pickup points"));
+		}
+
+
+		jQuery(".childInfo").append(jQuery("<div>").addClass("points_list"));
+		child.bindActions();
+	},
+
+	bindActions: function(){
+		jQuery(".container").on("click",".childInfo .drop_points",function(e){
+			e.preventDefault();
+			var _this = e.target;
+			jQuery(".points_list").empty();
+			child.createDropPointsList();
+		});
+		jQuery(".container").on("click",".childInfo .pickup_points",function(e){
+			e.preventDefault();
+			var _this = e.target;
+			jQuery(".points_list").empty();
+			child.createPickupPointsList();
+		});
+
+		jQuery(".container").on("click",".drop_points_list .address_point",function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var dropPointId = _this.getAttribute("drop_id");
+			child.getDropPoint(dropPointId);
+		});
+
+		jQuery(".container").on("click",".pickup_points_list .address_point",function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var pickupPointId = _this.getAttribute("pickup_id");
+			child.getPickupPoint(pickupPointId);
+		});
+
+		jQuery(".container").on("click",".addPickUpPoint a",function(e){
+			e.preventDefault();
+			child.creatPointsForm("pick_up");
+			
+		});
+
+		jQuery(".container").on("click",".addDropPoint a",function(e){
+			e.preventDefault();
+			child.creatPointsForm("drop");
+		});
+
+		jQuery(".container").on("click",".childInfo form a#submitPoints",function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var formClass = _this.parentNode.classList;
+			if(formClass == "pick_up"){
+				child.addPickUpPoint();
+			}else if(formClass == "drop"){
+				child.addDropPoint();
+			}
+		});
+	},
+
+	createDropPointsList: function(){
+		var childId = jQuery(".childItem.active").attr("child-id");
+		var addressObj = JSON.parse(storage.fetchItem("address_"+childId));
+		var drop_points = addressObj.drop_points;
+
+		var list = jQuery("<ul>").addClass("drop_points_list");
+		for(var i=0;i<drop_points.length;i++){
+			var dropPoint = jQuery("<a>").attr({"href":"javascript:;","class":"address_point"});
+			dropPoint.html(drop_points[i].name);
+			dropPoint.attr("drop_id",drop_points[i].drop_point_id);
+			if(drop_points[i].primary){
+				dropPoint.addClass("primary");
+			}
+			var listItem = jQuery("<li>");
+			listItem.append(dropPoint);
+			list.append(listItem);
+		}
+
+		jQuery(".points_list").append(list);
+
+		var addDropPoint = jQuery("<div>").addClass("addDropPoint");
+		addDropPoint.append(jQuery("<a>").attr({"href":"javascript:;"}).html("add Drop point"));
+		
+		jQuery(".points_list").append(addDropPoint);
+	},
+
+	createPickupPointsList: function(){
+		var childId = jQuery(".childItem.active").attr("child-id");
+		var addressObj = JSON.parse(storage.fetchItem("address_"+childId));
+		var pickup_points = addressObj.pickup_points;
+
+		var list = jQuery("<ul>").addClass("pickup_points_list");
+		for(var i=0;i<pickup_points.length;i++){
+			var pickupPoint = jQuery("<a>").attr({"href":"javascript:;","class":"address_point"});
+			pickupPoint.html(pickup_points[i].name);
+			pickupPoint.attr("pickup_id",pickup_points[i].pickup_point_id);
+			if(pickup_points[i].primary){
+				pickupPoint.addClass("primary");
+			}
+			var listItem = jQuery("<li>");
+			listItem.append(pickupPoint);
+			list.append(listItem);
+		}
+
+		jQuery(".points_list").append(list);
+
+		var addPickUpPoint = jQuery("<div>").addClass("addPickUpPoint");
+		addPickUpPoint.append(jQuery("<a>").attr({"href":"javascript:;"}).html("add pickUp point"));
+		
+		jQuery(".points_list").append(addPickUpPoint);
+	},
+
+	getDropPoint: function(dropPointId){
+		var payload = 'id='+dropPointId,
+			headers = {};
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('getDropPoint','GET',child.dropPointSuccess,child.dropPointFail, payload, headers);
+	},
+	
+	dropPointSuccess: function(response){
+		var appartment_number = response.appartment_number,
+			building_number = response.building_number,
+			latitude = response.latitude,
+			longitude = response.longitude,
+			name = response.name,
+			province = response.province_id,
+			street_name = response.street_name;
+
+
+
+		var pointContainer = jQuery("<table>").addClass("pointContainer");
+		var tableHeader = jQuery("<th>");
+		tableHeader.append(jQuery("<td>").html("appartment_number"));
+		tableHeader.append(jQuery("<td>").html("building_number"));
+		tableHeader.append(jQuery("<td>").html("latitude"));
+		tableHeader.append(jQuery("<td>").html("longitude"));
+		tableHeader.append(jQuery("<td>").html("name"));
+		tableHeader.append(jQuery("<td>").html("province"));
+		tableHeader.append(jQuery("<td>").html("street_name"));
+		pointContainer.append(tableHeader);
+
+		var tableContent = jQuery("<tr>");
+		tableContent.append(jQuery("<td>").html(appartment_number));
+		tableContent.append(jQuery("<td>").html(building_number));
+		tableContent.append(jQuery("<td>").html(latitude));
+		tableContent.append(jQuery("<td>").html(longitude));
+		tableContent.append(jQuery("<td>").html(name));
+		tableContent.append(jQuery("<td>").html(province));
+		tableContent.append(jQuery("<td>").html(street_name));
+		pointContainer.append(tableContent);
+
+		jQuery(".points_list").append(pointContainer);
+		console.log(response);
+	},
+
+	dropPointFail: function(response){
+		console.log(response);
+	},
+
+	getPickupPoint: function(pickupPointId){
+		var payload = 'id='+pickupPointId,
+			headers = {};
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('getPickupPoint','GET',child.pickupPointSuccess,child.pickupPointFail, payload, headers);
+	},
+
+	pickupPointSuccess: function(response){
+		var appartment_number = response.appartment_number,
+			building_number = response.building_number,
+			latitude = response.latitude,
+			longitude = response.longitude,
+			name = response.name,
+			province = response.province_id,
+			street_name = response.street_name;
+
+		var pointContainer = jQuery("<table>").addClass("pointContainer");
+		var tableHeader = jQuery("<th>");
+		tableHeader.append(jQuery("<td>").html("appartment_number"));
+		tableHeader.append(jQuery("<td>").html("building_number"));
+		tableHeader.append(jQuery("<td>").html("latitude"));
+		tableHeader.append(jQuery("<td>").html("longitude"));
+		tableHeader.append(jQuery("<td>").html("name"));
+		tableHeader.append(jQuery("<td>").html("province"));
+		tableHeader.append(jQuery("<td>").html("street_name"));
+		pointContainer.append(tableHeader);
+
+		var tableContent = jQuery("<tr>");
+		tableContent.append(jQuery("<td>").html(appartment_number));
+		tableContent.append(jQuery("<td>").html(building_number));
+		tableContent.append(jQuery("<td>").html(latitude));
+		tableContent.append(jQuery("<td>").html(longitude));
+		tableContent.append(jQuery("<td>").html(name));
+		tableContent.append(jQuery("<td>").html(province));
+		tableContent.append(jQuery("<td>").html(street_name));
+
+		pointContainer.append(tableContent);
+		
+		jQuery(".points_list").append(pointContainer);
+
+		console.log(response);
+	},
+
+	pickupPointFail: function(response){
+		console.log(response);
+	},
+
+
+	creatPointsForm: function(point_type){
+
+		var form = jQuery("<form>");
+		form.addClass(point_type);
+		var array = ["appartment_number","building_number","latitude","longitude","name","primary","province_id","street_name","student_id"]
+		
+		for(var i=0;i<array.length;i++){
+			var fieldSet = jQuery("<fieldset>");
+			fieldSet.append("<label>").html(array[i]);
+			if(array[i] == "primary"){
+				fieldSet.append(jQuery("<input>").attr({"type":"checkbox","id":array[i]}));
+			}else{
+				fieldSet.append(jQuery("<input>").attr({"type":"text","id":array[i]}));	
+			}
+			form.append(fieldSet);
+		}
+		
+		form.append(jQuery("<a>").attr({"href":"javascript:;","id":"submitPoints"}).html("Submit"));
+
+
+		jQuery(".childInfo").append(form);
+	},
+
+	addPickUpPoint: function(){
+		var payload = {},
+			appartment_number = jQuery('#appartment_number').val(),
+			building_number = jQuery('#building_number').val(),
+			latitude = jQuery('#latitude').val(),
+			longitude = jQuery('#longitude').val(),
+			name = jQuery('#name').val(),
+			primary = document.getElementById('primary').checked,
+			province_id = jQuery('#province_id').val(),
+			street_name = jQuery('#street_name').val(),
+			student_id = jQuery('.childrenList .childItem.active').attr("child-id"),
+			address_id = jQuery('.childrenList .childItem.active').attr("child-address");
+
+		if(appartment_number.length < 0 || building_number.length < 0 ||  latitude.length < 0 || longitude.length < 0 || name.length < 0 || province_id.length < 0 || street_name.length < 0){
+			alert("all fields should be filled");
+			return;
+		}
+
+	
+		payload.appartment_number = appartment_number;
+		payload.building_number = building_number;
+
+		payload.latitude = latitude;
+		payload.longitude = longitude;
+		payload.name = name;
+		payload.primary = primary;
+		payload.province_id = province_id;
+		payload.street_name = street_name;
+		payload.student_id = student_id;
+		payload.address_id = address_id;
+
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('addPickupPoint','POST',child.addPickUpPointSuccess,child.addPickUpPointFail, payload);
+
+	},
+
+	addPickUpPointSuccess: function(response){
+		console.log(response);
+	},
+	addPickUpPointFail: function(response){
+		console.log(response);
+	},
+
+	addDropPoint: function(){
+		var payload = {},
+			appartment_number = jQuery('#appartment_number').val(),
+			building_number = jQuery('#building_number').val(),
+			latitude = jQuery('#latitude').val(),
+			longitude = jQuery('#longitude').val(),
+			name = jQuery('#name').val(),
+			primary = document.getElementById('primary').checked,
+			province_id = jQuery('#province_id').val(),
+			street_name = jQuery('#street_name').val(),
+			student_id = jQuery('.childrenList .childItem.active').attr("child-id"),
+			address_id = jQuery('.childrenList .childItem.active').attr("child-address");
+
+		if(appartment_number.length < 0 || building_number.length < 0 ||  latitude.length < 0 || longitude.length < 0 || name.length < 0 || province_id.length < 0 || street_name.length < 0){
+			alert("all fields should be filled");
+			return;
+		}
+
+	
+		payload.appartment_number = appartment_number;
+		payload.building_number = building_number;
+
+		payload.latitude = latitude;
+		payload.longitude = longitude;
+		payload.name = name;
+		payload.primary = primary;
+		payload.province_id = province_id;
+		payload.street_name = street_name;
+		payload.student_id = student_id;
+		payload.address_id = address_id;
+
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('addDropPoint','POST',child.addDropPointSuccess,child.addDropPointFail, payload);
+
+	},
+	addDropPointSuccess: function(response){
+		console.log(response);
+	},
+	addDropPointFail: function(response){
+		console.log(response);
+	}
+}
+
+jQuery(document).ready(function(){
+	login.init();
+});

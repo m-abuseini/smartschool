@@ -82,12 +82,17 @@ router.delete('/delete/:id',function(req,res){
 * GET  specific address by id
 * this will not be used now as all the data is saved on javascript object. on the browser.
 */
-router.get('/getspecificaddressbyid/:id',function(req,res){
+router.get('/getaddress',function(req,res){
 	var db = req.db;
 	var collection = db.get('addresses');
-	var addressToGet = req.params.id;
+	var addressToGet = req.query.id;
+	console.log(addressToGet);
+	if(addressToGet == undefined || addressToGet == null){
+		res.json({success: false,message: "please provide an ID for the address "});
+		return;
+	}
 	collection.findOne({_id:addressToGet},{}, function(e, docs){
-		res.json(docs);
+		res.json({success:true,address:docs});
 	});
 });
 

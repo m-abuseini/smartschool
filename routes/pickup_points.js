@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Pickup_point = require('../models/pickup_point');
+var Address = require('../models/address');
 
 
 /**
@@ -63,13 +64,39 @@ router.get('/list',function(req,res){
 * Post to add address
 */
 router.post('/add',function(req,res){
-	var db = req.db;
-	var collection = db.get('pickup_points');
-	collection.insert(req.body, function(err, ersult){
-		res.send(
-			(err === null)?{msg: ''}:{msg: err}
-		);
+
+	var newpickup_point = new Pickup_point({
+		name: req.body.name,
+		student_id: req.body.student_id,
+		province_id: req.body.province_id,
+		street_name: req.body.street_name,
+		building_number: req.body.building_number,
+		appartment_number: req.body.appartment_number,
+		latitude : req.body.latitude,
+		longitude: req.body.longitude,
+		primary: req.body.primary
 	});
+	newpickup_point.save(function(err,pickPoint){
+    if(err) throw err;
+
+    	Address.findById(req.body.address_id,function(err,address){
+    		if(err) throw err;
+    		var pickPointPointObj = {
+    								name: pickPoint.name,
+    								pickup_point_id: pickPoint._id,
+    								primary : pickPoint.primary
+    							};
+    		address.pickup_points.push(pickPointPointObj);
+
+    		address.save(function(err){
+    			if(err) throw err;
+
+    			console.log("pickup_point Added ");
+	    		res.json({success: true, message: "pickup_point added successfully"});
+    		});
+    	});
+	    
+  	});
 });
 
 /*
@@ -89,10 +116,10 @@ router.delete('/delete/:id',function(req,res){
 * GET  specific address by id
 * this will not be used now as all the data is saved on javascript object. on the browser.
 */
-router.get('/getspecificpickupbyid/:id',function(req,res){
+router.get('/getpickuppoint',function(req,res){
 	var db = req.db;
 	var collection = db.get('pickup_points');
-	var addressToGet = req.params.id;
+	var addressToGet = req.query.id;
 	collection.findOne({_id:addressToGet},{}, function(e, docs){
 		res.json(docs);
 	});

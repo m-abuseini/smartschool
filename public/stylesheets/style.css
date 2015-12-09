@@ -72,3 +72,4 @@ fieldset {
 
 /* MAp test*/
 #mapContainer{height: 500px;background: blue;}
+td{display: inline;margin: 0 5px;}

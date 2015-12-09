@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Drop_point = require('../models/drop_point');
+var Address = require('../models/address');
 
 
 /**
@@ -60,13 +61,39 @@ router.get('/list',function(req,res){
 * Post to add drop_points
 */
 router.post('/add',function(req,res){
-	var db = req.db;
-	var collection = db.get('drop_points');
-	collection.insert(req.body, function(err, ersult){
-		res.send(
-			(err === null)?{msg: ''}:{msg: err}
-		);
+
+	var newdrop_point = new Drop_point({
+		name: req.body.name,
+		student_id: req.body.student_id,
+		province_id: req.body.province_id,
+		street_name: req.body.street_name,
+		building_number: req.body.building_number,
+		appartment_number: req.body.appartment_number,
+		latitude : req.body.latitude,
+		longitude: req.body.longitude,
+		primary: req.body.primary
 	});
+	newdrop_point.save(function(err,dropPoint){
+    if(err) throw err;
+
+    	Address.findById(req.body.address_id,function(err,address){
+    		if(err) throw err;
+    		var dropPointObj = {
+    								name: dropPoint.name,
+    								drop_point_id: dropPoint._id,
+    								primary : dropPoint.primary
+    							};
+    		address.drop_points.push(dropPointObj);
+
+    		address.save(function(err){
+    			if(err) throw err;
+
+    			console.log("drop_point Added ");
+	    		res.json({success: true, message: "drop_point added successfully"});
+    		});
+    	});
+	    
+  	});
 });
 
 /*
@@ -86,10 +113,10 @@ router.delete('/delete/:id',function(req,res){
 * GET  specific drop points by id
 * 
 */
-router.get('/getspecificdropbyid/:id',function(req,res){
+router.get('/getdroppoint',function(req,res){
 	var db = req.db;
 	var collection = db.get('drop_points');
-	var drop_pointToGet = req.params.id;
+	var drop_pointToGet = req.query.id;
 	collection.findOne({_id:drop_pointToGet},{}, function(e, docs){
 		res.json(docs);
 	});

@@ -35,6 +35,7 @@ router.post('/',function(req, res){
 						//instead of static id should use refid
 						Parent.findOne({_id:user.refid}, function(err,user){
 							if(err) throw err;
+							//res.render("map");
 							res.json({
 								success: true,
 								message: 'success',
@@ -42,7 +43,7 @@ router.post('/',function(req, res){
 								user: user
 							});
 						});
-						//res.redirect('/map/'+id);
+						//res.end();
 						break;
 
 					case "2":

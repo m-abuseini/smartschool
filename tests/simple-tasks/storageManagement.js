@@ -1,4 +1,4 @@
-var storageManagement = (function() {
+var storage = (function() {
     
     var localStorageTest = function() {
         var test = "test";
@@ -48,12 +48,46 @@ var storageManagement = (function() {
     var removeLocalStorageItem = function(name) {
         localStorage.removeItem(name);
     };
+
+    var storeItem = function(name, value){
+        if(localStorageTest()){
+            setLocalStorageItem(name, value);
+        }else{
+            createSingleCookie(name, value);
+        }
+    };
+
+    var fetchItem = function(name){
+        if(localStorageTest()){
+            return getLocalStorageItem(name);
+        }else{
+            return getCookie(name);
+        }
+    };
+
+    var deleteItem = function(name){
+         if(localStorageTest()){
+            removeLocalStorageItem(name);
+        }else{
+            deleteSingleCookie(name);
+        }
+    }
+
+
     return {
-        checkLocalStorage: function() {
-            return localStorageTest();
+        storeItem: function(name, value){
+            setItem(name, value);
         },
-        
-        getCookieByName: function(cookieName) {
+
+        fetchItem: function(name){
+            return getItem(name, value);
+        },
+
+        deleteItem: function(name){
+            deleteItem(name);
+        },
+
+        getCookie: function(cookieName) {
             return getCookie(cookieName);
         },
         
@@ -64,17 +98,21 @@ var storageManagement = (function() {
         deleteCookie: function(cookieName) {
             deleteSingleCookie(cookieName);
         },
+
+        // checkLocalStorage: function() {
+        //     return localStorageTest();
+        // },
         
-        setLocalStorage: function(localStorageName, localStorageValue) {
-            setLocalStorageItem(localStorageName, localStorageValue);
-        },
+        // setLocalStorage: function(localStorageName, localStorageValue) {
+        //     setLocalStorageItem(localStorageName, localStorageValue);
+        // },
         
-        getLocalStorage: function(localStorageName) {
-            return getLocalStorageItem(localStorageName);
-        },
+        // getLocalStorage: function(localStorageName) {
+        //     return getLocalStorageItem(localStorageName);
+        // },
         
-        removeLocalStorage: function(localStorageName) {
-            removeLocalStorageItem(localStorageName);
-        }
+        // removeLocalStorage: function(localStorageName) {
+        //     removeLocalStorageItem(localStorageName);
+        // }
     };
 })();
