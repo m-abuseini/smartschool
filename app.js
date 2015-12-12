@@ -73,6 +73,13 @@ var app = express();
 var port = 3100;
 var server = app.listen(port);
 var io = require('socket.io').listen(server);
+var socketioJwt = require('socketio-jwt');
+app.set('superSecret', config.secret); // secret variable
+
+io.set('authorization',socketioJwt.authorize({
+  secret: app.get('superSecret'),
+  handshake: true
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
