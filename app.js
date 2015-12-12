@@ -11,6 +11,9 @@ var monk = require('monk');
 var mongoose = require('mongoose');
 var db = monk(config.database);
 
+// Socket io
+ http = require('http');
+
 var routes = require('./routes/index');
 var map = require('./routes/map');
 
@@ -61,6 +64,15 @@ var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
 
 var app = express();
+// var debug = require('debug')('generated-express-app');
+// var server = app.listen(app.get('port'), function() {
+//     debug('Express server listening on port ' + server.address().port);
+// });
+// var io = require('socket.io').listen(server);
+
+var port = 3100;
+var server = app.listen(port);
+var io = require('socket.io').listen(server);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -136,6 +148,27 @@ app.use('/api/privilages',privilages);
 //============ --- API URL STRUCT ----- -------//
 
 
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://'+req.headers.host+'3100');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -164,6 +197,21 @@ app.use(function(err, req, res, next) {
   res.render('error', {
     message: err.message,
     error: {}
+  });
+});
+
+
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+  socket.on('reseve-bus-id',function(data){
+    console.log(data);
+    console.log("Long = " + data.long);
+    console.log("Lat = " + data.lat);
+    socket.broadcast.emit('bus-id',data);
   });
 });
 

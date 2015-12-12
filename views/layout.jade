@@ -15,6 +15,19 @@ html(lang="en")
     block content
 
 
-    
+
   script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
   script(src='/javascripts/global.js')
+  script(src='/socket.io/socket.io.js')
+  script.
+    var socket = io.connect('http://10.109.12.249:3100');
+    socket.on('news', function (data) {
+      console.log("news" + data);
+      socket.emit('my other event', { my: 'data' });
+
+      socket.emit('reseve-bus-id', { long: '35.2312',lat: '31.231231' });
+    });
+    socket.on('bus-id',function(data){
+    	console.log("data recieved from server");
+    	console.log(data);
+    });
