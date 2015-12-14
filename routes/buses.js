@@ -16,51 +16,82 @@ router.get('/list',function(req,res){
 });
 
 
-router.get('/setup',function(req,res){
-  var newBus = new Bus({
-	language:   "1",
-	number: "1",
-	bus_driver:{
-		name: "bus driver name",
-		license: "photo _ URL",
-		age: "22",
-		phone_number : "123214"
-	},
-	bus_details : {
-		maker: "hyundai",
-		model: "bus",
-		plate_number: "12-34567",
-		capacity: "30"
-	},
-	trips: ["trip_id_1","trip_id_2"],
-	school_id: "school_id",
-	location: {
-		latitude: "34123",
-		longitude: ""
-	},
-	email: "bus@zlious.com"
-  });
+// router.get('/setup',function(req,res){
+//   var newBus = new Bus({
+// 	language:   "1",
+// 	number: "1",
+// 	bus_driver:{
+// 		name: "bus driver name",
+// 		license: "photo _ URL",
+// 		age: "22",
+// 		phone_number : "123214"
+// 	},
+// 	bus_details : {
+// 		maker: "hyundai",
+// 		model: "bus",
+// 		plate_number: "12-34567",
+// 		capacity: "30"
+// 	},
+// 	trips: [],
+// 	school_id: "school_id",
+// 	location: {
+// 		latitude: "34123",
+// 		longitude: "34123"
+// 	},
+// 	email: "bus@zlious.com"
+//   });
 
-  newBus.save(function(err){
-    if(err) throw err;
+//   newBus.save(function(err){
+//     if(err) throw err;
     
-    var newuser = new User({
-	    name: newBus.number, 
-		password: "123", 
-		type: 3,
-		refid: newBus._id,
-		email: newBus.email
-	  });
-	  newBus.save(function(err){
-	    if(err) throw err;
+//     var newuser = new User({
+// 	    name: newBus.number, 
+// 		password: "123", 
+// 		type: 3,
+// 		refid: newBus._id,
+// 		email: newBus.email
+// 	  });
+// 	  newuser.save(function(err){
+// 	    if(err) throw err;
 
-	    console.log("newBus added");
-	    res.json({success: true});
-	  });
-    //console.log("newParent added");
-    //res.json({success: true});
-  });
-});
+// 	    console.log("newBus added");
+// 	    res.json({success: true,bus: newBus});
+// 	  });
+//     //console.log("newParent added");
+//     //res.json({success: true});
+//   });
+// });
+
+
+//  router.get('/setup',function(req,res){
+//  	Bus.findById("566f0e5259536c10366d7268",function(err,bus){
+// 		if(bus){
+// 			console.log(bus);
+// 			var obj1 = {
+// 					trip_id: "566f1abd3e5a847805b05526",
+// 					type: "drop",
+// 					name: "trip 1 - drop points"
+// 				};
+// 			var obj2 = 	{
+// 					trip_id: "566f1be26933889846bcb681",
+// 					type: "pickup",
+// 					name: "trip 1 - pickup points"
+// 				};
+// 			bus.trips.push(obj1);
+// 			bus.trips.push(obj2);
+
+// 			bus.save(function(err){
+// 				if(err) throw err;
+
+// 				console.log(bus);
+// 				res.json({success: true,bus:bus});
+// 			});			
+// 		}else{
+// 			console.log("bus not found");
+// 		}
+// 	});
+// });
+
 
 
 

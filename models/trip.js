@@ -14,6 +14,16 @@ module.exports = mongoose.model('Trip', new Schema({
 
 
 
+// pickup_points,drop_points:[
+// 	{
+// 		name: String,
+// 		pickup_id/drop_id: String,
+// 		latitude : String,
+//   	longitude: String
+// 	},
+// ]
+
+
 // {
 // 	"_id"					:	"value",
 //	"name"					: 	"trip 1", 

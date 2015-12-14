@@ -16,24 +16,42 @@ router.get('/list',function(req,res){
 
 
 
-router.get('/setup',function(req,res){
-  var newTrip = new Trip({
-	name		: 	"trip 1", 
-	language	:	"langauge_id",
-	bus			:	"bus_id",
-	bus_teacher	:	"teacher_id",
-	type		: 	"pickup/drop",
-	pickup_points	: 	["pickup_point_id_1","pickup_point_id_2"],
-	drop_points		: 	["drop_point_id_1","drop_point_id_2"],
-	active	: 	true
-  });
+// router.get('/setup',function(req,res){
+//   var newTrip = new Trip({
+// 	name		: 	"trip 1 - pickup points", 
+// 	language	:	"langauge_id",
+// 	bus			:	"566f0e5259536c10366d7268",
+// 	bus_teacher	:	"teacher_id",
+// 	type		: 	"pickup",
+// 	pickup_points	: 	[
+// 	{
+// 		name: "home",
+// 		pickup_id: "5662d628e62c68ec57fd961f",
+// 		latitude : "31.978268",
+// 		longitude: "35.890762"
+// 	},
+// 	{
+// 		name: "work",
+// 		pickup_id: "5662d65ca097c294661b64f8",
+// 		latitude : "31.971961",
+// 		longitude: "35.832494"
+// 	},
+// 	{
+// 		name: "home 2",
+// 		pickup_id: "56687e0f638cd98488c81791",
+// 		latitude : "40.1231",
+// 		longitude: "45.1231"
+// 	}],
+// 	drop_points		: 	[],
+// 	active	: 	false
+//   });
 
-  newTrip.save(function(err){
-    if(err) throw err;
-	    console.log("newTrip Added ");
-	    res.json({success: true, message: "newTrip added successfully"});
-  });
-});
+//   newTrip.save(function(err){
+//     if(err) throw err;
+// 	    console.log("newTrip Added ");
+// 	    res.json({success: true, message: "newTrip added successfully"});
+//   });
+// });
 
 
 

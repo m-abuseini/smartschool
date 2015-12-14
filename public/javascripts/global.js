@@ -962,8 +962,18 @@ var login = {
 		//getPath.redirectTo("map");
 		//res.redirect("/map");
 		jQuery(".container").empty();
-		parent.init();
+		switch(response.user_type){
+			case "1":
+				parent.init();
+				break;
+			case "2":
 
+				break;
+			case "3":
+				bus.init();
+				break;
+		}
+		
 	},
 	fail: function(response){
 		alert('check console for errors');
@@ -1165,12 +1175,14 @@ var child = {
 			longitude = response.longitude,
 			name = response.name,
 			province = response.province_id,
-			street_name = response.street_name;
+			street_name = response.street_name,
+			student_id = response.student_id;
 
 
 
 		var pointContainer = jQuery("<table>").addClass("pointContainer");
 		var tableHeader = jQuery("<th>");
+		tableHeader.append(jQuery("<td>").html("student_id"));
 		tableHeader.append(jQuery("<td>").html("appartment_number"));
 		tableHeader.append(jQuery("<td>").html("building_number"));
 		tableHeader.append(jQuery("<td>").html("latitude"));
@@ -1181,6 +1193,7 @@ var child = {
 		pointContainer.append(tableHeader);
 
 		var tableContent = jQuery("<tr>");
+		tableContent.append(jQuery("<td>").html(student_id));
 		tableContent.append(jQuery("<td>").html(appartment_number));
 		tableContent.append(jQuery("<td>").html(building_number));
 		tableContent.append(jQuery("<td>").html(latitude));
@@ -1212,10 +1225,12 @@ var child = {
 			longitude = response.longitude,
 			name = response.name,
 			province = response.province_id,
-			street_name = response.street_name;
+			street_name = response.street_name,
+			student_id = response.student_id;
 
 		var pointContainer = jQuery("<table>").addClass("pointContainer");
 		var tableHeader = jQuery("<th>");
+		tableHeader.append(jQuery("<td>").html("student_id"));
 		tableHeader.append(jQuery("<td>").html("appartment_number"));
 		tableHeader.append(jQuery("<td>").html("building_number"));
 		tableHeader.append(jQuery("<td>").html("latitude"));
@@ -1226,6 +1241,7 @@ var child = {
 		pointContainer.append(tableHeader);
 
 		var tableContent = jQuery("<tr>");
+		tableContent.append(jQuery("<td>").html(student_id));
 		tableContent.append(jQuery("<td>").html(appartment_number));
 		tableContent.append(jQuery("<td>").html(building_number));
 		tableContent.append(jQuery("<td>").html(latitude));
@@ -1356,6 +1372,31 @@ var child = {
 		console.log(response);
 	}
 }
+
+
+
+
+
+var bus = {
+	init: function(){
+		bus.drawAvailableTrips();
+	},
+
+	drawAvailableTrips: function(){
+		var userObj = JSON.parse(storage.fetchItem("user"));
+		var availableTrips = userObj.trips;
+		var tripName,tripType,tripId;
+
+		for(var i=0;i<availableTrips.length;i++){
+			tripName = availableTrips[i].name;
+			tripType = availableTrips[i].type;
+			tripId = availableTrips[i].trip_id;
+		}
+	}
+}
+
+
+
 
 jQuery(document).ready(function(){
 	login.init();

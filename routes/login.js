@@ -3,6 +3,7 @@ var router  = express.Router();
 var User    = require('../models/user');
 var Parent  = require('../models/parent');
 var Student = require('../models/student');
+var Bus 	= require('../models/bus');
 var jwt     = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var app     = express();
 var config  = require('../config');
@@ -28,32 +29,48 @@ router.post('/',function(req, res){
 				res.json({success: false, message: 'wrong pasword'});
 			}else{
 				var token = jwt.sign(user, app.get('superSecret'),{
-					expiresInMinutes: 1440
+					expiresIn: 1440*60
 				});
 				switch(user.type){
 					case "1":
 						//instead of static id should use refid
-						Parent.findOne({_id:user.refid}, function(err,user){
+						Parent.findOne({_id:user.refid}, function(err,parent){
 							if(err) throw err;
 							//res.render("map");
 							res.json({
 								success: true,
 								message: 'success',
 								token: token,
-								user: user
+								user: parent,
+								user_type: user.type
 							});
 						});
 						//res.end();
 						break;
 
 					case "2":
-						Student.findOne({_id:user.refid}, function(err,user){
+						Student.findOne({_id:user.refid}, function(err,student){
 							if(err) throw err;
 							res.json({
 								success: true,
 								message: 'success',
 								token: token,
-								user: user
+								user: student,
+								user_type: user.type
+							});
+						});
+						break;
+
+					case "3":
+						Bus.findOne({_id: user.refid},function(err,bus){
+							if(err) throw err;
+
+							res.json({
+								success: true,
+								message: 'success',
+								token: token,
+								user: bus,
+								user_type: user.type
 							});
 						});
 						break;

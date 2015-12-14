@@ -77,26 +77,26 @@ router.get('/list',function(req,res){
 // });
 
 
-router.post('/updateParent/:id',function(req,res){
-	var userToGet = req.params.id;
-	Parent.findOne({_id: userToGet},function(err,parent){
-		if(parent){
-			console.log(parent);
-			parent.remove(function(err){if (err) throw err; res.json({success: true})})
-			// parent.children_obj.id_56617733f35a91883d5496bb = obj1;
-			// parent.children_obj.id_56618b7b0f50e3cc4b9ac5f0 = obj2;
-			// console.log(parent);
-			// parent.save(function(err){
-			// 	if(err) throw err;
+// router.post('/updateParent/:id',function(req,res){
+// 	var userToGet = req.params.id;
+// 	Parent.findOne({_id: userToGet},function(err,parent){
+// 		if(parent){
+// 			console.log(parent);
+// 			parent.remove(function(err){if (err) throw err; res.json({success: true})})
+// 			// parent.children_obj.id_56617733f35a91883d5496bb = obj1;
+// 			// parent.children_obj.id_56618b7b0f50e3cc4b9ac5f0 = obj2;
+// 			// console.log(parent);
+// 			// parent.save(function(err){
+// 			// 	if(err) throw err;
 
-			// 	console.log(parent);
-			// 	res.json({success: true});
-			// });			
-		}else{
-			console.log("parent not found");
-		}
-	});
-});
+// 			// 	console.log(parent);
+// 			// 	res.json({success: true});
+// 			// });			
+// 		}else{
+// 			console.log("parent not found");
+// 		}
+// 	});
+// });
 
 
 

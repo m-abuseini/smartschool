@@ -210,14 +210,9 @@ app.use(function(err, req, res, next) {
 
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-  socket.on('reseve-bus-id',function(data){
-    console.log(data);
-    console.log("Long = " + data.long);
-    console.log("Lat = " + data.lat);
+  socket.on('receive-bus-id',function(data){
+    //console.log(data);
+    socket.emit('bus-id',data);
     socket.broadcast.emit('bus-id',data);
   });
 });

@@ -14,6 +14,13 @@ module.exports = mongoose.model('Bus', new Schema({
 
 
 
+// trips: [
+// 	{
+// 		trip_id: String,
+// 		type: String,
+// 		name: String
+// 	}
+// ]
 
 // location: {
 // 		latitude: String,
