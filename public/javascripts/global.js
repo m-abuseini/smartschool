@@ -842,7 +842,8 @@ var requestHandler = (function() {
         "getDropPoint": "api/drop_points/getdroppoint",
         "getPickupPoint": "api/pickup_points/getpickuppoint",
         "addDropPoint" : "api/drop_points/add",
-        "addPickupPoint" : "api/pickup_points/add"
+        "addPickupPoint" : "api/pickup_points/add",
+        "getTrip": "api/trips/gettrip"
     };
     
     var sendRequest = function(payload, headers ,sCallback, fCallback, arg) {
@@ -1380,18 +1381,120 @@ var child = {
 var bus = {
 	init: function(){
 		bus.drawAvailableTrips();
+		bus.bindButtonsAction();
+	},
+
+	bindButtonsAction: function(){
+		jQuery(".container").on("click",".available-trips .trip-link",function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var tripId = _this.getAttribute("ref-id");
+			bus.getTrip(tripId);
+		});
 	},
 
 	drawAvailableTrips: function(){
 		var userObj = JSON.parse(storage.fetchItem("user"));
 		var availableTrips = userObj.trips;
-		var tripName,tripType,tripId;
+		var tripName,tripType,tripId,tripRecord,
+			tripsContainer = jQuery("<div>").addClass("available-trips"),
+			dropTrips = jQuery("<div>").addClass("drop-trips"),
+			pickupTrips = jQuery("<div>").addClass("pickup-trips");
 
 		for(var i=0;i<availableTrips.length;i++){
 			tripName = availableTrips[i].name;
 			tripType = availableTrips[i].type;
 			tripId = availableTrips[i].trip_id;
+			tripRecord = jQuery("<div>").addClass("trip-record");
+			if(tripType == "drop" ){
+				tripRecord.append(jQuery("<a>").attr({"href":"javascript:;","class": "trip-link drop-trip","ref-id":tripId}).html(tripName));
+				dropTrips.append(tripRecord);
+				tripsContainer.append(dropTrips);
+			}else if(tripType == "pickup"){
+				tripRecord.append(jQuery("<a>").attr({"href":"javascript:;","class": "trip-link pickup-trip","ref-id":tripId}).html(tripName));
+				pickupTrips.append(tripRecord);
+				tripsContainer.append(pickupTrips);
+			}
 		}
+		jQuery(".container").append(tripsContainer);
+	},
+
+	getTrip: function(tripId){
+		var payload = 'id='+tripId,
+			headers = {};
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('getTrip','GET',bus.tripSuccess,bus.tripFail, payload, headers);
+	},
+
+	tripSuccess: function(response){
+		console.log(response);
+		var tripObj = response.trip;
+		var tripRecord = jQuery("<div>").addClass("trip-container");
+		var item = jQuery("<div>");
+		item.append(jQuery("<span>").html("name : "));
+		item.append(jQuery("<span>").html(tripObj.name));
+		tripRecord.append(item);
+
+		var item1 = jQuery("<div>");
+		item1.append(jQuery("<span>").html("bus : "));
+		item1.append(jQuery("<span>").html(tripObj.bus));
+		tripRecord.append(item1);
+
+
+		var item2 = jQuery("<div>");
+		item2.append(jQuery("<span>").html("active : "));
+		item2.append(jQuery("<span>").html(tripObj.active));
+		tripRecord.append(item2);
+
+
+
+		var item3 = jQuery("<div>");
+		item3.append(jQuery("<span>").html("bus_teacher : "));
+		item3.append(jQuery("<span>").html(tripObj.bus_teacher));
+		tripRecord.append(item3);
+
+		if(tripObj.type == "drop"){
+			var item4 = jQuery("<div>");
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("name"));
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("longitude"));
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("latitude"));
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("drop_id"));
+			tripRecord.append(item4);
+
+			for(var i=0;i<tripObj.drop_points.length;i++){
+				var item5 = jQuery("<div>");
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.drop_points[i].name));
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.drop_points[i].longitude));
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.drop_points[i].latitude));
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.drop_points[i].drop_id));
+				tripRecord.append(item5);
+			}
+			
+		}else if(tripObj.type == "pickup"){
+			var item4 = jQuery("<div>");
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("name"));
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("longitude"));
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("latitude"));
+			item4.append(jQuery("<span>").attr("style","width:25%;display:inline-block;font-weight: bold;").html("pickup_id"));
+			tripRecord.append(item4);
+
+			for(var i=0;i<tripObj.pickup_points.length;i++){
+				var item5 = jQuery("<div>");
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.pickup_points[i].name));
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.pickup_points[i].longitude));
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.pickup_points[i].latitude));
+				item5.append(jQuery("<span>").attr("style","width:25%;display:inline-block;").html(tripObj.pickup_points[i].pickup_id));
+				tripRecord.append(item5);
+			}
+			
+		}
+
+		jQuery(".container").append(tripRecord);
+
+	},
+	tripFail: function(response){
+		alert("check console for errors");
+		console.log(response);
 	}
 }
 

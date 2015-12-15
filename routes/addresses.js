@@ -86,7 +86,6 @@ router.get('/getaddress',function(req,res){
 	var db = req.db;
 	var collection = db.get('addresses');
 	var addressToGet = req.query.id;
-	console.log(addressToGet);
 	if(addressToGet == undefined || addressToGet == null){
 		res.json({success: false,message: "please provide an ID for the address "});
 		return;

@@ -55,6 +55,20 @@ router.get('/list',function(req,res){
 
 
 
+router.get('/gettrip',function(req,res){
+	var db = req.db;
+	var collection = db.get('trips');
+	var tripId = req.query.id;
+	if(tripId == undefined || tripId == null){
+		res.json({success: false,message: "please provide an ID for the trip "});
+		return;
+	}
+	collection.findOne({_id:tripId},{},function(e,docs){
+		res.json({success:true,trip:docs});
+	});
+});
+
+
 /*
 * Post to add trip
 */
