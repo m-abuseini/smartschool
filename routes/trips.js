@@ -69,6 +69,32 @@ router.get('/gettrip',function(req,res){
 });
 
 
+
+router.get('/gettripbypoint',function(req,res){
+	var db = req.db;
+	var collection = db.get('trips');
+	var tripType = req.query.type;
+	var pointId = req.query.pointId;
+
+	if(tripType == undefined || tripType == null || pointId == undefined || pointId == null){
+		res.json({success: false,message: "missing params "});
+		return;
+	}
+	collection.find({type:tripType},{},function(e,docs){
+		for(doc in docs){
+			var pointsobjarray = docs[doc][tripType+'_points'];
+			for(obj in pointsobjarray){
+				if(pointsobjarray[obj][tripType+'_id'] === pointId){
+					console.log(2.1);
+					console.log(doc);
+					res.json({success:true,trip:docs[doc]});
+				}
+			}
+		}
+	});
+});
+
+
 /*
 * Post to add trip
 */

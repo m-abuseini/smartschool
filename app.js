@@ -212,7 +212,7 @@ app.use(function(err, req, res, next) {
 io.sockets.on('connection', function (socket) {
   socket.on('receive-bus-id',function(data){
     //console.log(data);
-    socket.emit('bus-id',data);
+    //socket.emit('bus-id',data);
     socket.broadcast.emit('bus-id',data);
   });
 });

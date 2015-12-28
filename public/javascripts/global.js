@@ -843,7 +843,8 @@ var requestHandler = (function() {
         "getPickupPoint": "api/pickup_points/getpickuppoint",
         "addDropPoint" : "api/drop_points/add",
         "addPickupPoint" : "api/pickup_points/add",
-        "getTrip": "api/trips/gettrip"
+        "getTrip": "api/trips/gettrip",
+        "getTripByPoint": "api/trips/gettripbypoint"
     };
     
     var sendRequest = function(payload, headers ,sCallback, fCallback, arg) {
@@ -1499,6 +1500,20 @@ var bus = {
 }
 
 
+
+
+var testFunc = function(){
+	var headers = {},
+		payload = 'type=pickup&pointId=5662d628e62c68ec57fd961f';
+
+	requestHandler.sendRequest('getTripByPoint','GET',testFuncSuccess,testFuncFail, payload, headers);
+}
+function testFuncSuccess(res){
+	console.log(res);
+}
+function testFuncFail(res){
+	console.log(res);
+}
 
 
 jQuery(document).ready(function(){

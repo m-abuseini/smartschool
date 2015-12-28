@@ -20,7 +20,7 @@ html(lang="en")
   script(src='/javascripts/global.js')
   script(src='/socket.io/socket.io.js')
   script.
-    var socket = io.connect('http://10.109.13.12:3100',{
+    var socket = io.connect('http://localhost:3100',{
     	query: 'token='+JSON.parse(storage.fetchItem("token"))
     });
     socket.on('bus-id',function(data){
