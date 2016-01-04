@@ -209,13 +209,123 @@ app.use(function(err, req, res, next) {
 
 
 
+/*********/
+
+
+/***
+ // sending to sender-client only
+ socket.emit('message', "this is a test");
+
+ // sending to all clients, include sender
+ io.emit('message', "this is a test");
+
+ // sending to all clients except sender
+ socket.broadcast.emit('message', "this is a test");
+
+ // sending to all clients in 'game' room(channel) except sender
+ socket.broadcast.to('game').emit('message', 'nice game');
+
+ // sending to all clients in 'game' room(channel), include sender
+ io.in('game').emit('message', 'cool game');
+
+ // sending to sender client, only if they are in 'game' room(channel)
+ socket.to('game').emit('message', 'enjoy the game');
+
+ // sending to all clients in namespace 'myNamespace', include sender
+ io.of('myNamespace').emit('message', 'gg');
+
+ // sending to individual socketid
+ socket.broadcast.to(socketid).emit('message', 'for your eyes only');
+
+**/
+
+
+var events = require('events');
+var url = require('url')
+  , ev = new events.EventEmitter();
+
+// <ns name>: <ns regexp>
+var routes = {
+  // /bus/:id
+  //'bus': '^\\/bus\\/(\\[a-zA-Z0-9]+)$',
+  'bus' : 'http://localhost:3100\/bus\/([a-zA-Z0-9]+)',
+
+  // /:something/:id
+  'default': '^\\/(\\\w+)\\/(\\d+)$'
+};
+
+// global entry point for new connections
 io.sockets.on('connection', function (socket) {
-  socket.on('receive-bus-id',function(data){
-    //console.log(data);
-    //socket.emit('bus-id',data);
-    socket.broadcast.emit('bus-id',data);
-  });
+
+  // extract namespace from connected url query param 'ns'
+  var ns = url.parse(socket.handshake.url, true).query.ns;
+  console.log('connected ns: '+ns)
+
+  //
+  for (var k in routes) {
+    var routeName = k;
+    var routeRegexp = new RegExp(routes[k]);
+
+    // if connected ns matched with route regexp
+    if (ns.match(routeRegexp)) {
+      console.log('matched: '+routeName)
+
+      console.log("nameSpace = = "+ ns);
+      // create new namespace (or use previously created)
+      io.of(ns).on('connection', function (socket) {
+
+        console.log("connected to socket");
+        
+        // fire event when socket connecting
+        ev.emit('socket.connection route.'+routeName, socket);
+        
+        socket.on('tracking-bus',function(data){
+          
+          console.log(data);
+          io.of(ns).emit('push-tracking', data);
+          io.emit('push-tracking',data);
+        });
+
+        socket.on('disconnect', function(){
+          console.log('user disconnected');
+        });
+        // @todo: add more if needed
+        // on('message') -> ev.emit(...)
+      });
+
+      break;
+    }
+  }
+
+  // when nothing matched
+  // ...
 });
 
+// event when socket connected in 'bus' namespace
+ev.on('socket.connection route.bus', function () {
+  console.log('route[bus] connecting..');
+});
+
+// event when socket connected in 'default' namespace
+ev.on('socket.connection route.default', function () {
+  console.log('route[default] connecting..');
+}); 
+
+/***********/
+
+// io.sockets.on('connection', function (socket) {
+//   socket.on('receive-bus-id',function(data){
+//     //console.log(data);
+//     //socket.emit('bus-id',data);
+//     socket.broadcast.emit('bus-id',data);
+//   });
+
+
+// });
+
+// var nsp = io.of('http://localhost:3100/bus');
+// nsp.on('connection',function(socket){
+//   console.log("socket connected");
+// });
 
 module.exports = app;

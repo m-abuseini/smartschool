@@ -1109,6 +1109,23 @@ var child = {
 				child.addDropPoint();
 			}
 		});
+
+		jQuery('.container').on("click",".points_list .track_point",function(e){
+			e.preventDefault();
+			var type,point_id;
+			var _this = e.target;
+			var _directParent = _this.parentNode;
+			var _directList = _directParent.parentNode.classList;
+			var _pointEle = _directParent.querySelector('.address_point');
+			if(_directList == "drop_points_list"){
+				type = "drop";
+				point_id = _pointEle.getAttribute("drop_id");
+			}else if(_directList == "pickup_points_list"){
+				type = "pickup";
+				point_id = _pointEle.getAttribute("pickup_id");
+			}
+			child.getTrip(type,point_id);
+		});
 	},
 
 	createDropPointsList: function(){
@@ -1126,6 +1143,7 @@ var child = {
 			}
 			var listItem = jQuery("<li>");
 			listItem.append(dropPoint);
+			listItem.append(jQuery('<a>').attr({'href':'javascript:;','class':'track_point'}).html('Track Point'));
 			list.append(listItem);
 		}
 
@@ -1152,6 +1170,7 @@ var child = {
 			}
 			var listItem = jQuery("<li>");
 			listItem.append(pickupPoint);
+			listItem.append(jQuery('<a>').attr({'href':'javascript:;','class':'track_point'}).html('Track Point'));
 			list.append(listItem);
 		}
 
@@ -1372,7 +1391,76 @@ var child = {
 	},
 	addDropPointFail: function(response){
 		console.log(response);
+	},
+
+	getTrip: function(type,pointId){
+		var headers = {},
+			payload = 'type='+type+'&pointId='+pointId;
+
+		requestHandler.sendRequest('getTripByPoint','GET',child.getTripSuccess,child.getTripFail, payload, headers);
+	},
+
+	getTripSuccess: function(response){
+		console.log(response);
+		var _trip = response.trip;
+		var busId = _trip.bus;
+
+		child.generateIOConnection(busId);
+	},
+
+	getTripFail: function(response){
+		console.log(response);
+	},
+
+
+	generateIOConnection: function(busId){
+		//http://stackoverflow.com/questions/13143945/dynamic-namespaces-socket-io
+		// var nameSpace = '/bus/'+busId;
+		// return io.connect(nameSpace, {
+  //      		query: 'ns='+nameSpace+'&token='+JSON.parse(storage.fetchItem("token")),
+  //      		resource: "socket.io",
+  //   	});
+
+	
+		window.socket = io('http://localhost:3100/bus/'+busId,{
+			query: 'ns=http://localhost:3100/bus/'+busId+'&token='+JSON.parse(storage.fetchItem("token")),
+			resource: "socket.io"
+		});
+
+		window.socket.on('connection',function(socket){
+			console.log("user socket ready");
+		});
+
+		window.socket.on('push-tracking',function(data){
+    		console.log("data recieved from server");
+    		console.log(data);
+    	});
+
+
+
+		// window.busSocket = io.connect('http://localhost:3100/bus');
+		// busSocket.on('connection',function(socket){
+		// 	console.log("socket ready");
+		// });
+		// busSocket.on("data",function(data){
+		// 	console.log('data === '+ data);
+		// });
+
+		//socket.emit('tracking-bus',"testing bus connection from users");
+
+		// socket.on('connection',function(socket){
+		// 	console.log("connected to socket");
+			
+
+	 //    	socket.on('disconnect', function(){
+		// 	   console.log('user disconnected');
+		// 	});
+
+	 //    	socket.emit('tracking-bus',"testing bus connection from users");
+		// });
+		
 	}
+
 }
 
 
@@ -1493,6 +1581,7 @@ var bus = {
 		jQuery(".container").append(tripRecord);
 
 	},
+
 	tripFail: function(response){
 		alert("check console for errors");
 		console.log(response);
@@ -1503,10 +1592,7 @@ var bus = {
 
 
 var testFunc = function(){
-	var headers = {},
-		payload = 'type=pickup&pointId=5662d628e62c68ec57fd961f';
-
-	requestHandler.sendRequest('getTripByPoint','GET',testFuncSuccess,testFuncFail, payload, headers);
+	
 }
 function testFuncSuccess(res){
 	console.log(res);

@@ -85,8 +85,6 @@ router.get('/gettripbypoint',function(req,res){
 			var pointsobjarray = docs[doc][tripType+'_points'];
 			for(obj in pointsobjarray){
 				if(pointsobjarray[obj][tripType+'_id'] === pointId){
-					console.log(2.1);
-					console.log(doc);
 					res.json({success:true,trip:docs[doc]});
 				}
 			}
