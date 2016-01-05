@@ -1124,6 +1124,13 @@ var child = {
 				type = "pickup";
 				point_id = _pointEle.getAttribute("pickup_id");
 			}
+
+			//var 
+
+
+
+
+
 			child.getTrip(type,point_id);
 		});
 	},

@@ -36,6 +36,14 @@ module.exports = mongoose.model('Student', new Schema({
 }));
 
 
+// trips: [
+//  {
+//    trip_id: String,
+//    type: String,
+//    name: String
+//  }
+// ]
+
 
 
 

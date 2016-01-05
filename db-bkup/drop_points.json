@@ -9,6 +9,7 @@
     "latitude" : "31.978268", 
     "longitude" : "35.890762", 
     "primary" : true, 
+    "trip_id" : "566f1abd3e5a847805b05526", 
     "__v" : NumberInt(0)
 }
 { 
@@ -22,6 +23,7 @@
     "latitude" : "31.971961", 
     "longitude" : "35.832494", 
     "primary" : true, 
+    "trip_id" : "566f1abd3e5a847805b05526", 
     "__v" : NumberInt(0)
 }
 { 
@@ -35,5 +37,6 @@
     "latitude" : "31.1234", 
     "longitude" : "35.1234", 
     "primary" : false, 
+    "trip_id" : "566f1abd3e5a847805b05526", 
     "__v" : NumberInt(0)
 }

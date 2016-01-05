@@ -11,7 +11,8 @@ module.exports = mongoose.model('Pickup_point', new Schema({
   appartment_number: String,
   latitude : String,
   longitude: String,
-  primary: Boolean
+  primary: Boolean,
+  trip_id: String
 }));
 
 
