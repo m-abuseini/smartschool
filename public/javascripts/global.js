@@ -1435,29 +1435,29 @@ var child = {
   //   	});
 
 	
-		window.socket = io('http://localhost:3100/bus/'+busId,{
-			query: 'ns=http://localhost:3100/bus/'+busId+'&token='+JSON.parse(storage.fetchItem("token")),
-			resource: "socket.io"
-		});
-
-		window.socket.on('connection',function(socket){
-			console.log("user socket ready");
-		});
-
-		window.socket.on('push-tracking',function(data){
-    		console.log("data recieved from server");
-    		console.log(data);
-    	});
-
-
-
-		// window.busSocket = io.connect('http://localhost:3100/bus');
-		// busSocket.on('connection',function(socket){
-		// 	console.log("socket ready");
+		// window.socket = io('http://localhost:3100/bus/'+busId,{
+		// 	query: 'ns=http://localhost:3100/bus/'+busId+'&token='+JSON.parse(storage.fetchItem("token")),
+		// 	resource: "socket.io"
 		// });
-		// busSocket.on("data",function(data){
-		// 	console.log('data === '+ data);
+
+		// window.socket.on('connection',function(socket){
+		// 	console.log("user socket ready");
 		// });
+
+		// window.socket.on('push-tracking',function(data){
+  //   		console.log("data recieved from server");
+  //   		console.log(data);
+  //   	});
+
+
+
+		window.busSocket = io.connect('http://localhost:3100/bus');
+		busSocket.on('connection',function(socket){
+			console.log("socket ready");
+		});
+		busSocket.on("data",function(data){
+			console.log('data === '+ data);
+		});
 
 		//socket.emit('tracking-bus',"testing bus connection from users");
 

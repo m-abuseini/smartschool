@@ -107,7 +107,7 @@ app.use(function(req,res,next){
 });
 
 app.use(function(req,res,next) {
-  mongoose.connect("mongodb://"+config.database);
+  mongoose.createConnection("mongodb://"+config.database);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function callback () {
@@ -324,6 +324,9 @@ io.sockets.on('connection', function (socket) {
 // });
 
 io.sockets.on('connection', function (socket) {
+  
+  console.log("socket connected");
+
   var nsp = io.of('http://localhost:3100/bus');
   nsp.on('connection',function(socket){
     console.log("socket connected");
