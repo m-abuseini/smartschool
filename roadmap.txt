@@ -17,8 +17,10 @@ release V1:
 
 release V2:
 	1- restructure the code.
-	2- create an info pages for the website.
-	3- IOS App.
+	2- add validation.
+	3- add API responses middleware.
+	4- create an info pages for the website.
+	5- IOS App.
 
 
 release V3:

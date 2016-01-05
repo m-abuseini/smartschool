@@ -6,7 +6,7 @@ var crypto = require('crypto');
 //module.exports = mongoose.model('User', new Schema({ 
 var UserSchema = new Schema({
     name: String, 
-    password: String, 
+    hashedPassword: String, 
     type: String,
     refid: String,
     email: String 
@@ -15,19 +15,20 @@ var UserSchema = new Schema({
 
 
 UserSchema
-	.virtual('userPassword')
+	.virtual('password')
 	.set(function(password) {
-    	this._password = password;
+    	//this.password = password;
     	this.salt = this.makeSalt();
-    	this.hashedPassword = this.encryptPassword(password);
+    	this.hashedPassword = encryptPassword(password);
   	})
   	.get(function() {
-    	return this._password;
+    	return this.hashedPassword;
   	});
 
 var encryptPassword = function(password) {
-    if (!password || !this.salt) return '';
-    var salt = new Buffer(this.salt, 'base64');
+    // if (!password || !this.salt) return '';
+    // var salt = new Buffer(this.salt, 'base64');
+    var salt = "smartSchool_Mseini86593910";
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
   }
 

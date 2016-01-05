@@ -1204,7 +1204,8 @@ var child = {
 			name = response.name,
 			province = response.province_id,
 			street_name = response.street_name,
-			student_id = response.student_id;
+			student_id = response.student_id,
+			trip_id   = response.trip_id;
 
 
 
@@ -1218,6 +1219,7 @@ var child = {
 		tableHeader.append(jQuery("<td>").html("name"));
 		tableHeader.append(jQuery("<td>").html("province"));
 		tableHeader.append(jQuery("<td>").html("street_name"));
+		tableHeader.append(jQuery("<td>").html("trip_id"));
 		pointContainer.append(tableHeader);
 
 		var tableContent = jQuery("<tr>");
@@ -1229,6 +1231,7 @@ var child = {
 		tableContent.append(jQuery("<td>").html(name));
 		tableContent.append(jQuery("<td>").html(province));
 		tableContent.append(jQuery("<td>").html(street_name));
+		tableContent.append(jQuery("<td>").html(trip_id));
 		pointContainer.append(tableContent);
 
 		jQuery(".points_list").append(pointContainer);
@@ -1254,7 +1257,8 @@ var child = {
 			name = response.name,
 			province = response.province_id,
 			street_name = response.street_name,
-			student_id = response.student_id;
+			student_id = response.student_id,
+			trip_id   = response.trip_id;
 
 		var pointContainer = jQuery("<table>").addClass("pointContainer");
 		var tableHeader = jQuery("<th>");
@@ -1266,6 +1270,7 @@ var child = {
 		tableHeader.append(jQuery("<td>").html("name"));
 		tableHeader.append(jQuery("<td>").html("province"));
 		tableHeader.append(jQuery("<td>").html("street_name"));
+		tableHeader.append(jQuery("<td>").html("trip_id"));
 		pointContainer.append(tableHeader);
 
 		var tableContent = jQuery("<tr>");
@@ -1277,6 +1282,7 @@ var child = {
 		tableContent.append(jQuery("<td>").html(name));
 		tableContent.append(jQuery("<td>").html(province));
 		tableContent.append(jQuery("<td>").html(street_name));
+		tableContent.append(jQuery("<td>").html(trip_id));
 
 		pointContainer.append(tableContent);
 		

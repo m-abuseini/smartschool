@@ -239,7 +239,7 @@ app.use(function(err, req, res, next) {
 
 **/
 
-
+/*
 var events = require('events');
 var url = require('url')
   , ev = new events.EventEmitter();
@@ -300,16 +300,16 @@ io.sockets.on('connection', function (socket) {
   // when nothing matched
   // ...
 });
+*/
+// // event when socket connected in 'bus' namespace
+// ev.on('socket.connection route.bus', function () {
+//   console.log('route[bus] connecting..');
+// });
 
-// event when socket connected in 'bus' namespace
-ev.on('socket.connection route.bus', function () {
-  console.log('route[bus] connecting..');
-});
-
-// event when socket connected in 'default' namespace
-ev.on('socket.connection route.default', function () {
-  console.log('route[default] connecting..');
-}); 
+// // event when socket connected in 'default' namespace
+// ev.on('socket.connection route.default', function () {
+//   console.log('route[default] connecting..');
+// }); 
 
 /***********/
 
@@ -323,9 +323,11 @@ ev.on('socket.connection route.default', function () {
 
 // });
 
-// var nsp = io.of('http://localhost:3100/bus');
-// nsp.on('connection',function(socket){
-//   console.log("socket connected");
-// });
+io.sockets.on('connection', function (socket) {
+  var nsp = io.of('http://localhost:3100/bus');
+  nsp.on('connection',function(socket){
+    console.log("socket connected");
+  });
+});
 
 module.exports = app;

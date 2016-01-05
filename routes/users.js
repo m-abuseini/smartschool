@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User   = require('../models/user');
 var Parent   = require('../models/parent');
-
+var crypto = require('crypto');
 
 /* GET users listing. */
 // router.get('/', function(req, res, next) {
@@ -157,13 +157,12 @@ router.post('/updatepassword',function(req,res){
 		if(newPass == newPassConfirmation){
 			User.findOne({_id: userId},function(err,user){
 				if(user){
-					if(user.password ===  currentPass){
-						//user.password = newPass;
-						// user.save(function(err){
-						// 	if(err) throw err;
-						// 	res.json({success:true,message:'password changed'});
-						// });
-						userPassword.set(newPass); // ???????
+					if(user.password ===  encryptPassword(currentPass)){
+						user.password = newPass;
+						user.save(function(err){
+							if(err) throw err;
+							res.json({success:true,message:'password changed'});
+						});
 					}else{
 						res.json({success:false,message:'current password didnt match'});
 					}
@@ -177,5 +176,13 @@ router.post('/updatepassword',function(req,res){
 
 });
 
+
+
+var encryptPassword = function(password) {
+    // if (!password || !this.salt) return '';
+    // var salt = new Buffer(this.salt, 'base64');
+    var salt = "smartSchool_Mseini86593910";
+    return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+ }
 
 module.exports = router;

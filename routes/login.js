@@ -8,6 +8,7 @@ var jwt     = require('jsonwebtoken'); // used to create, sign, and verify token
 var app     = express();
 var config  = require('../config');
 app.set('superSecret', config.secret); // secret variable
+var crypto = require('crypto');
 
 
 
@@ -25,7 +26,7 @@ router.post('/',function(req, res){
 		if(!user){
 			res.json({success: false,message: 'User not found'});
 		}else if(user){
-			if(user.password != req.body.password){
+			if(user.password != encryptPassword(req.body.password)){
 				res.json({success: false, message: 'wrong pasword'});
 			}else{
 				var token = jwt.sign(user, app.get('superSecret'),{
@@ -89,6 +90,11 @@ router.post('/',function(req, res){
 });
 
 
-
+var encryptPassword = function(password) {
+    // if (!password || !this.salt) return '';
+    // var salt = new Buffer(this.salt, 'base64');
+    var salt = "smartSchool_Mseini86593910";
+    return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+ }
 
 module.exports = router;
