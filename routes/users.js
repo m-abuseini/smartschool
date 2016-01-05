@@ -149,5 +149,33 @@ router.post('/updateuser/:id',function(req,res){
 });
 
 
+router.post('/updatepassword',function(req,res){
+	var userId = req.body.id,
+		currentPass = request.body.currentPass,
+		newPass = req.body.newPass,
+		newPassConfirmation = req.body.newPassConfirmation;
+		if(newPass == newPassConfirmation){
+			User.findOne({_id: userId},function(err,user){
+				if(user){
+					if(user.password ===  currentPass){
+						//user.password = newPass;
+						// user.save(function(err){
+						// 	if(err) throw err;
+						// 	res.json({success:true,message:'password changed'});
+						// });
+						userPassword.set(newPass); // ???????
+					}else{
+						res.json({success:false,message:'current password didnt match'});
+					}
+				}else{
+					res.json({success:false,message:'User not Found'});
+				}
+			});
+		}else{
+			res.json({success:false,message:'pass and pass confirmation didnt match'});
+		}
+
+});
+
 
 module.exports = router;

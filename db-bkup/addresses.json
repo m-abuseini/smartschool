@@ -1,0 +1,52 @@
+{ 
+    "_id" : ObjectId("5662dc9077f7fbe062d4a280"), 
+    "language" : "1", 
+    "country_id" : "address_country_id", 
+    "city_id" : "address_city_id", 
+    "drop_points" : [
+        {
+            "primary" : true, 
+            "drop_point_id" : "5662d4affc3553dc2c79d1e5", 
+            "name" : "home"
+        }, 
+        {
+            "name" : "home 2", 
+            "drop_point_id" : ObjectId("56687bbf6a30b87c8b4607f1"), 
+            "primary" : false
+        }
+    ], 
+    "pickup_points" : [
+        {
+            "primary" : true, 
+            "pickup_point_id" : "5662d628e62c68ec57fd961f", 
+            "name" : "home"
+        }, 
+        {
+            "name" : "home 2", 
+            "pickup_point_id" : ObjectId("56687e0f638cd98488c81791"), 
+            "primary" : false
+        }
+    ], 
+    "__v" : NumberInt(2)
+}
+{ 
+    "_id" : ObjectId("5662dd21b93eb6f4677a106e"), 
+    "language" : "1", 
+    "country_id" : "address_country_id", 
+    "city_id" : "address_city_id", 
+    "drop_points" : [
+        {
+            "primary" : true, 
+            "drop_point_id" : "5662d603e62c68ec57fd961e", 
+            "name" : "work"
+        }
+    ], 
+    "pickup_points" : [
+        {
+            "primary" : true, 
+            "pickup_point_id" : "5662d65ca097c294661b64f8", 
+            "name" : "work"
+        }
+    ], 
+    "__v" : NumberInt(0)
+}

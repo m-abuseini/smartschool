@@ -1,0 +1,29 @@
+release V1:
+	1- DB.
+	2- API's for mobile devices.
+	3- comming soon page on server.
+	4- tracking sockets.
+	5- basic workflow :
+		A- parent App: 
+			a- parent have list of children registered.
+			b- each child gets a drop points and pick up points list
+			c- each points list contains list of available points.
+			d- each point can be displayed or tracked.
+		B- Bus App:
+			a- each bus contains a list of available trips.
+			b- each trip conatins trip details and list of points.
+			c- when trip is active bus will send location by using socket namespace [unique].
+	6- android App.
+
+release V2:
+	1- restructure the code.
+	2- create an info pages for the website.
+	3- IOS App.
+
+
+release V3:
+	1- create an admin site (CMS for data entry).
+
+
+release V4:
+	1- enable web functionality as mobile.

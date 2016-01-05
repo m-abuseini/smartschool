@@ -1,0 +1,63 @@
+{ 
+    "_id" : ObjectId("566f042652e7e20845c1d4df"), 
+    "language" : "1", 
+    "number" : "1", 
+    "bus_driver" : {
+        "phone_number" : "123214", 
+        "age" : "22", 
+        "license" : "photo _ URL", 
+        "name" : "bus driver name"
+    }, 
+    "bus_details" : {
+        "capacity" : "30", 
+        "plate_number" : "12-34567", 
+        "model" : "bus", 
+        "maker" : "hyundai"
+    }, 
+    "school_id" : "school_id", 
+    "location" : {
+        "longitude" : "34123", 
+        "latitude" : "34123"
+    }, 
+    "email" : "bus@zlious.com", 
+    "trips" : [
+
+    ], 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("566f0e5259536c10366d7268"), 
+    "language" : "1", 
+    "number" : "1", 
+    "bus_driver" : {
+        "phone_number" : "123214", 
+        "age" : "22", 
+        "license" : "photo _ URL", 
+        "name" : "bus driver name"
+    }, 
+    "bus_details" : {
+        "capacity" : "30", 
+        "plate_number" : "12-34567", 
+        "model" : "bus", 
+        "maker" : "hyundai"
+    }, 
+    "school_id" : "school_id", 
+    "location" : {
+        "longitude" : "34123", 
+        "latitude" : "34123"
+    }, 
+    "email" : "bus@zlious.com", 
+    "trips" : [
+        {
+            "trip_id" : "566f1abd3e5a847805b05526", 
+            "type" : "drop", 
+            "name" : "trip 1 - drop points"
+        }, 
+        {
+            "trip_id" : "566f1be26933889846bcb681", 
+            "type" : "pickup", 
+            "name" : "trip 1 - pickup points"
+        }
+    ], 
+    "__v" : NumberInt(1)
+}

@@ -1,0 +1,39 @@
+{ 
+    "_id" : ObjectId("5662d4affc3553dc2c79d1e5"), 
+    "name" : "home", 
+    "student_id" : "5662e19d84001efc680a1822", 
+    "province_id" : "address_province_id", 
+    "street_name" : "Qatri ben fujaa", 
+    "building_number" : "7", 
+    "appartment_number" : "1", 
+    "latitude" : "31.978268", 
+    "longitude" : "35.890762", 
+    "primary" : true, 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5662d603e62c68ec57fd961e"), 
+    "name" : "work", 
+    "student_id" : "5662e291079127605bae8585", 
+    "province_id" : "address_province_id", 
+    "street_name" : "Al shaeb", 
+    "building_number" : "9", 
+    "appartment_number" : "2", 
+    "latitude" : "31.971961", 
+    "longitude" : "35.832494", 
+    "primary" : true, 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("56687bbf6a30b87c8b4607f1"), 
+    "name" : "home 2", 
+    "student_id" : "5662e19d84001efc680a1822", 
+    "province_id" : "province_id_2", 
+    "street_name" : "street 1", 
+    "building_number" : "12", 
+    "appartment_number" : "1", 
+    "latitude" : "31.1234", 
+    "longitude" : "35.1234", 
+    "primary" : false, 
+    "__v" : NumberInt(0)
+}

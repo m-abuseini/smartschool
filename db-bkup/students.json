@@ -1,0 +1,92 @@
+{ 
+    "_id" : ObjectId("5662e19d84001efc680a1822"), 
+    "language" : "1", 
+    "national_id" : "1", 
+    "photo" : "photo_url", 
+    "first_name" : "home student", 
+    "middle_name" : "student", 
+    "lastname" : "student", 
+    "place_of_birth" : "amman jordan", 
+    "date_of_birth" : "new Date", 
+    "religion" : "1", 
+    "nationality" : "1", 
+    "gender" : "1", 
+    "address" : "5662dc9077f7fbe062d4a280", 
+    "order_in_family" : "1", 
+    "health_status" : "1", 
+    "education_status" : "1", 
+    "failure_reasons" : "1", 
+    "financial_aid_type" : "1", 
+    "family_income" : "1", 
+    "relief_card_status" : "1", 
+    "social_status" : "1", 
+    "family_members_count" : "1", 
+    "school" : "school_id_1", 
+    "class" : "class_id_1", 
+    "section" : "section_is_1", 
+    "phone" : "1", 
+    "email" : "student@zlious.com", 
+    "device_id" : "student-device_id", 
+    "educational_documents" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "roles" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "parents" : [
+        "5662e5ef591f97106f69d336"
+    ], 
+    "personal_documents" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "__v" : NumberInt(1)
+}
+{ 
+    "_id" : ObjectId("5662e291079127605bae8585"), 
+    "language" : "1", 
+    "national_id" : "1", 
+    "photo" : "photo_url", 
+    "first_name" : "work student", 
+    "middle_name" : "student", 
+    "lastname" : "student", 
+    "place_of_birth" : "amman jordan", 
+    "date_of_birth" : "new Date", 
+    "religion" : "1", 
+    "nationality" : "1", 
+    "gender" : "1", 
+    "address" : "5662dd21b93eb6f4677a106e", 
+    "order_in_family" : "1", 
+    "health_status" : "1", 
+    "education_status" : "1", 
+    "failure_reasons" : "1", 
+    "financial_aid_type" : "1", 
+    "family_income" : "1", 
+    "relief_card_status" : "1", 
+    "social_status" : "1", 
+    "family_members_count" : "1", 
+    "school" : "school_id_1", 
+    "class" : "class_id_1", 
+    "section" : "section_is_1", 
+    "phone" : "1", 
+    "email" : "student2@zlious.com", 
+    "device_id" : "student-device_id", 
+    "educational_documents" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "roles" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "parents" : [
+        "5662e5ef591f97106f69d336"
+    ], 
+    "personal_documents" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "__v" : NumberInt(1)
+}

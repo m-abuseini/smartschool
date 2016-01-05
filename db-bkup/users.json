@@ -1,0 +1,36 @@
+{ 
+    "_id" : ObjectId("5662e19d84001efc680a1823"), 
+    "name" : "home student", 
+    "password" : "123", 
+    "type" : "2", 
+    "refid" : "5662e19d84001efc680a1822", 
+    "email" : "student@zlious.com", 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5662e291079127605bae8586"), 
+    "name" : "work student", 
+    "password" : "123", 
+    "type" : "2", 
+    "refid" : "5662e291079127605bae8585", 
+    "email" : "student2@zlious.com", 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5662e5ef591f97106f69d337"), 
+    "name" : "mahmoud", 
+    "password" : "123", 
+    "type" : "1", 
+    "refid" : "5662e5ef591f97106f69d336", 
+    "email" : "parent@zlious.com", 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("566f0e5259536c10366d7269"), 
+    "name" : "1", 
+    "password" : "123", 
+    "type" : "3", 
+    "refid" : "566f0e5259536c10366d7268", 
+    "email" : "bus@zlious.com", 
+    "__v" : NumberInt(0)
+}

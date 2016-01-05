@@ -1,0 +1,66 @@
+{ 
+    "_id" : ObjectId("566f1abd3e5a847805b05526"), 
+    "name" : "trip 1 - drop points", 
+    "language" : "langauge_id", 
+    "bus" : "566f0e5259536c10366d7268", 
+    "bus_teacher" : "teacher_id", 
+    "type" : "drop", 
+    "active" : false, 
+    "drop_points" : [
+        {
+            "longitude" : "35.890762", 
+            "latitude" : "31.978268", 
+            "drop_id" : "5662d4affc3553dc2c79d1e5", 
+            "name" : "home"
+        }, 
+        {
+            "longitude" : "35.832494", 
+            "latitude" : "31.971961", 
+            "drop_id" : "5662d603e62c68ec57fd961e", 
+            "name" : "work"
+        }, 
+        {
+            "longitude" : "35.1234", 
+            "latitude" : "31.1234", 
+            "drop_id" : "56687bbf6a30b87c8b4607f1", 
+            "name" : "home 2"
+        }
+    ], 
+    "pickup_points" : [
+
+    ], 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("566f1be26933889846bcb681"), 
+    "name" : "trip 1 - pickup points", 
+    "language" : "langauge_id", 
+    "bus" : "566f0e5259536c10366d7268", 
+    "bus_teacher" : "teacher_id", 
+    "type" : "pickup", 
+    "active" : false, 
+    "drop_points" : [
+
+    ], 
+    "pickup_points" : [
+        {
+            "longitude" : "35.890762", 
+            "latitude" : "31.978268", 
+            "pickup_id" : "5662d628e62c68ec57fd961f", 
+            "name" : "home"
+        }, 
+        {
+            "longitude" : "35.832494", 
+            "latitude" : "31.971961", 
+            "pickup_id" : "5662d65ca097c294661b64f8", 
+            "name" : "work"
+        }, 
+        {
+            "longitude" : "45.1231", 
+            "latitude" : "40.1231", 
+            "pickup_id" : "56687e0f638cd98488c81791", 
+            "name" : "home 2"
+        }
+    ], 
+    "__v" : NumberInt(0)
+}

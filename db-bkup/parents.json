@@ -1,0 +1,46 @@
+{ 
+    "_id" : ObjectId("5662e5ef591f97106f69d336"), 
+    "language" : "1", 
+    "national_id" : "1", 
+    "first_name" : "mahmoud", 
+    "middle_name" : "parent", 
+    "lastname" : "parent", 
+    "place_of_birth" : "amman jordan", 
+    "date_of_birth" : "new Date", 
+    "religion" : "1", 
+    "nationality" : "1", 
+    "gender" : "1", 
+    "address" : "id_1", 
+    "social_status" : "1", 
+    "education_level" : "1", 
+    "work" : "1", 
+    "family_members_count" : "4", 
+    "phone" : "1", 
+    "email" : "parent@zlious.com", 
+    "device_id" : "device_id_1", 
+    "roles" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "children" : [
+        {
+            "schhold_id" : "child_school_id_1", 
+            "address" : "5662dc9077f7fbe062d4a280", 
+            "class" : "child_class_id_1", 
+            "full_name" : "home student", 
+            "child_id" : "5662e19d84001efc680a1822"
+        }, 
+        {
+            "schhold_id" : "child_school_id_1", 
+            "address" : "5662dd21b93eb6f4677a106e", 
+            "class" : "child_class_id_1", 
+            "full_name" : "work student", 
+            "child_id" : "5662e291079127605bae8585"
+        }
+    ], 
+    "personal_documents" : [
+        "id_1", 
+        "id_2"
+    ], 
+    "__v" : NumberInt(0)
+}
