@@ -148,4 +148,32 @@ router.post('/update',function(req,res){
 });
 
 
+
+
+router.post('/toggleactivationtrip',function(req,res){
+	var tripId = req.body.id;
+	Trip.findOne({_id: tripId},function(err,trip){
+		if(trip){
+			var activeTrip = trip.active;
+			trip.active = !activeTrip;
+			trip.save(function(err){
+				if (err) throw err;
+
+				if(activeTrip){
+					res.json({success: true,message: "trip activated",active: true});
+				}else{
+					res.json({success: true,message: "trip deactivated",active: false});
+				}
+				
+			});		
+		}else{
+			res.json({success: false,message:"trip not found"});
+			console.log("user not found");
+		}
+	});
+});
+
+
+
+
 module.exports = router;

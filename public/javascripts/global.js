@@ -844,7 +844,7 @@ var requestHandler = (function() {
         "addDropPoint" : "api/drop_points/add",
         "addPickupPoint" : "api/pickup_points/add",
         "getTrip": "api/trips/gettrip",
-        "getTripByPoint": "api/trips/gettripbypoint"
+        "toggleTrip": "api/trips/toggleactivationtrip"
     };
     
     var sendRequest = function(payload, headers ,sCallback, fCallback, arg) {
@@ -1114,24 +1114,8 @@ var child = {
 			e.preventDefault();
 			var type,point_id;
 			var _this = e.target;
-			var _directParent = _this.parentNode;
-			var _directList = _directParent.parentNode.classList;
-			var _pointEle = _directParent.querySelector('.address_point');
-			if(_directList == "drop_points_list"){
-				type = "drop";
-				point_id = _pointEle.getAttribute("drop_id");
-			}else if(_directList == "pickup_points_list"){
-				type = "pickup";
-				point_id = _pointEle.getAttribute("pickup_id");
-			}
-
-			//var 
-
-
-
-
-
-			child.getTrip(type,point_id);
+			var trip_id = _this.getAttribute('trip_id');
+			child.getTrip(trip_id);
 		});
 	},
 
@@ -1411,11 +1395,11 @@ var child = {
 		console.log(response);
 	},
 
-	getTrip: function(type,pointId){
+	getTrip: function(tripId){
 		var headers = {},
-			payload = 'type='+type+'&pointId='+pointId;
+			payload = 'id='+tripId;
 
-		requestHandler.sendRequest('getTripByPoint','GET',child.getTripSuccess,child.getTripFail, payload, headers);
+		requestHandler.sendRequest('getTrip','GET',child.getTripSuccess,child.getTripFail, payload, headers);
 	},
 
 	getTripSuccess: function(response){
@@ -1441,16 +1425,16 @@ var child = {
 
 	
 		window.socket = io('http://localhost:3100/bus/'+busId,{
-			query: 'ns=http://localhost:3100/bus/'+busId+'&token='+JSON.parse(storage.fetchItem("token")),
+			query: 'ns=/bus/'+busId+'&token='+JSON.parse(storage.fetchItem("token")),
 			resource: "socket.io"
 		});
 
 		window.socket.on('connection',function(socket){
-			console.log("user socket ready");
+			//console.log("user socket ready");
 		});
 
 		window.socket.on('push-tracking',function(data){
-    		console.log("data recieved from server");
+    		//console.log("data recieved from server");
     		console.log(data);
     	});
 		
@@ -1474,6 +1458,14 @@ var bus = {
 			var _this = e.target;
 			var tripId = _this.getAttribute("ref-id");
 			bus.getTrip(tripId);
+		});
+
+		jQuery('.container').on('click','.trip-container .toggle_trip_active_status',function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var tripId = _this.getAttribute('trip_id');
+
+			bus.toggleTripStatus(tripId);
 		});
 	},
 
@@ -1573,12 +1565,33 @@ var bus = {
 			
 		}
 
+		var item6 = jQuery("<div>");
+		item6.append(jQuery("<a>").attr({'href':'javascript:;','class':'toggle_trip_active_status','trip_id':tripObj._id}).html("toggle activation"));
+		tripRecord.append(item6);
+
 		jQuery(".container").append(tripRecord);
 
 	},
 
 	tripFail: function(response){
 		alert("check console for errors");
+		console.log(response);
+	},
+
+	toggleTripStatus: function(tripId){
+		var payload = {},
+			headers = {};
+
+		payload.id = tripId;
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('toggleTrip','POST',bus.toggleTripStatusSuccess,bus.toggleTripStatusFail, payload, headers);
+	},
+
+	toggleTripStatusSuccess: function(response){
+		console.log(response);
+	},
+	toggleTripStatusFail: function(response){
 		console.log(response);
 	}
 }

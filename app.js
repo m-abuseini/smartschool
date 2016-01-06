@@ -109,7 +109,7 @@ app.use(function(req,res,next){
   next();
 });
 
-mongoose.createConnection("mongodb://"+config.database);
+mongoose.connect("mongodb://"+config.database);
 
 
 app.use('/', routes);
@@ -253,7 +253,7 @@ io.sockets.on('connection', function (socket) {
 
   // extract namespace from connected url query param 'ns'
   var ns = url.parse(socket.handshake.url, true).query.ns;
-  console.log('connected ns: '+ns)
+  //console.log('connected ns: '+ns)
 
   //
   for (var k in routes) {
@@ -262,22 +262,19 @@ io.sockets.on('connection', function (socket) {
 
     // if connected ns matched with route regexp
     if (ns.match(routeRegexp)) {
-      console.log('matched: '+routeName)
+      //console.log('matched: '+routeName)
 
-      console.log("nameSpace = = "+ ns);
       // create new namespace (or use previously created)
       io.of(ns).on('connection', function (socket) {
-
-        console.log("connected to socket");
         
         // fire event when socket connecting
         ev.emit('socket.connection route.'+routeName, socket);
         
         socket.on('tracking-bus',function(data){
           
-          console.log(data);
+          //console.log(data);
           io.of(ns).emit('push-tracking', data);
-          io.emit('push-tracking',data);
+          //io.emit('push-tracking',data);
         });
 
         socket.on('disconnect', function(){
