@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 var db = monk(config.database);
 
 // Socket io
- http = require('http');
+var http = require('http');
 
 var routes = require('./routes/index');
 var map = require('./routes/map');
@@ -74,12 +74,15 @@ var port = 3100;
 var server = app.listen(port);
 var io = require('socket.io').listen(server);
 var socketioJwt = require('socketio-jwt');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.set('superSecret', config.secret); // secret variable
 
-io.set('authorization',socketioJwt.authorize({
-  secret: app.get('superSecret'),
-  handshake: true
-}));
+// io.set('authorization',socketioJwt.authorize({
+//   secret: app.get('superSecret'),
+//   handshake: true
+// }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -106,16 +109,7 @@ app.use(function(req,res,next){
   next();
 });
 
-app.use(function(req,res,next) {
-  mongoose.createConnection("mongodb://"+config.database);
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function callback () {
-    console.log('DB initialised successfully');
-    app.locals.db = db;
-  });
-  next();
-});
+mongoose.createConnection("mongodb://"+config.database);
 
 
 app.use('/', routes);
@@ -239,7 +233,7 @@ app.use(function(err, req, res, next) {
 
 **/
 
-/*
+
 var events = require('events');
 var url = require('url')
   , ev = new events.EventEmitter();
@@ -248,7 +242,7 @@ var url = require('url')
 var routes = {
   // /bus/:id
   //'bus': '^\\/bus\\/(\\[a-zA-Z0-9]+)$',
-  'bus' : 'http://localhost:3100\/bus\/([a-zA-Z0-9]+)',
+  'bus' : '\/bus\/([a-zA-Z0-9]+)',
 
   // /:something/:id
   'default': '^\\/(\\\w+)\\/(\\d+)$'
@@ -300,16 +294,16 @@ io.sockets.on('connection', function (socket) {
   // when nothing matched
   // ...
 });
-*/
+
 // // event when socket connected in 'bus' namespace
-// ev.on('socket.connection route.bus', function () {
-//   console.log('route[bus] connecting..');
-// });
+ ev.on('socket.connection route.bus', function () {
+   console.log('route[bus] connecting..');
+ });
 
 // // event when socket connected in 'default' namespace
-// ev.on('socket.connection route.default', function () {
-//   console.log('route[default] connecting..');
-// }); 
+ ev.on('socket.connection route.default', function () {
+  console.log('route[default] connecting..');
+});
 
 /***********/
 
@@ -323,14 +317,14 @@ io.sockets.on('connection', function (socket) {
 
 // });
 
-io.sockets.on('connection', function (socket) {
+// io.sockets.on('connection', function (socket) {
   
-  console.log("socket connected");
+//   console.log("socket connected");
 
-  var nsp = io.of('http://localhost:3100/bus');
-  nsp.on('connection',function(socket){
-    console.log("socket connected");
-  });
-});
+//   var nsp = io.of('http://localhost:3100/bus');
+//   nsp.on('connection',function(socket){
+//     console.log("socket connected");
+//   });
+// });
 
-module.exports = app;
+console.log('Server listening on http://localhost:' + port);

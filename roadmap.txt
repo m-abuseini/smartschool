@@ -17,7 +17,7 @@ release V1:
 
 release V2:
 	1- restructure the code.
-	2- add validation.
+	2- add validation. (using boom npm)
 	3- add API responses middleware.
 	4- create an info pages for the website.
 	5- IOS App.
