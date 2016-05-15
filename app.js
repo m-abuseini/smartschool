@@ -36,6 +36,7 @@ var drop_points = require('./routes/drop_points');
 var pickup_points = require('./routes/pickup_points');
 var buses = require('./routes/buses');
 var trips = require('./routes/trips');
+var gcm = require('./routes/gcm');
 
 
 var countries = require('./routes/countries');
@@ -64,6 +65,11 @@ var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
 
 var app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, '/views'));
+app.set('view engine', 'ejs');
+
 // var debug = require('debug')('generated-express-app');
 // var server = app.listen(app.get('port'), function() {
 //     debug('Express server listening on port ' + server.address().port);
@@ -83,10 +89,6 @@ app.set('superSecret', config.secret); // secret variable
 //   secret: app.get('superSecret'),
 //   handshake: true
 // }));
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 
 // uncomment after placing your favicon in /public
@@ -130,6 +132,7 @@ app.use('/api/pickup_points', pickup_points);
 app.use('/api/drop_points', drop_points);
 app.use('/api/buses',buses);
 app.use('/api/trips',trips);
+app.use('/api/gcm',gcm);
 
 
 app.use('/api/countries',countries);
@@ -233,95 +236,215 @@ app.use(function(err, req, res, next) {
 
 **/
 
+/******
 
-var events = require('events');
-var url = require('url')
-  , ev = new events.EventEmitter();
+Dyanamic Name Spaces Stack overFlow link
 
-// <ns name>: <ns regexp>
-var routes = {
-  // /bus/:id
-  //'bus': '^\\/bus\\/(\\[a-zA-Z0-9]+)$',
-  'bus' : '\/bus\/([a-zA-Z0-9]+)',
+//http://stackoverflow.com/questions/13143945/dynamic-namespaces-socket-io
 
-  // /:something/:id
-  'default': '^\\/(\\\w+)\\/(\\d+)$'
-};
+****/
 
-// global entry point for new connections
+
+// var events = require('events');
+// var url = require('url')
+//   , ev = new events.EventEmitter();
+
+// // <ns name>: <ns regexp>
+// var routes = {
+//   // /bus/:id
+//   //'bus': '^\\/bus\\/(\\[a-zA-Z0-9]+)$',
+//   'bus' : '\/bus\/([a-zA-Z0-9]+)',
+
+//   // /:something/:id
+//   'default': '^\\/(\\\w+)\\/(\\d+)$'
+// };
+
+// // global entry point for new connections
+// io.sockets.on('connection', function (socket) {
+
+//   // extract namespace from connected url query param 'ns'
+//   var ns = url.parse(socket.handshake.url, true).query.ns;
+//   //console.log('connected ns: '+ns)
+
+//   //
+//   for (var k in routes) {
+//     var routeName = k;
+//     var routeRegexp = new RegExp(routes[k]);
+
+//     // if connected ns matched with route regexp
+//     if (ns.match(routeRegexp)) {
+//       //console.log('matched: '+routeName)
+
+//       // create new namespace (or use previously created)
+//       io.of(ns).on('connection', function (socket) {
+        
+//         // fire event when socket connecting
+//         ev.emit('socket.connection route.'+routeName, socket);
+        
+//         /**socket.on('tracking-bus',function(data){
+          
+//           //console.log(data);
+//           io.of(ns).emit('push-tracking', data);
+//           //ev.emit('push-tracking', data);
+//           //io.emit('push-tracking',data);
+//         });*/
+        
+//         socket.on('disconnect', function(){
+//           console.log('user disconnected');
+//           // socket.removeListener('connection', function(){
+//           //   console.log("listener removed");
+//           // });
+//         });
+
+//         // socket.on('reciever-disconnected',function(){
+//         //   socket.removeListener('push-tracking', function(){
+//         //     console.log("listener removed --- push-tracking");
+//         //   });
+//         // });
+
+//         // socket.on('sender-disconnected',function(){
+//         //   socket.removeListener('tracking-bus', function(){
+//         //     console.log("listener removed --- tracking-bus");
+//         //   });
+//         // });
+
+
+
+//         // @todo: add more if needed
+//         // on('message') -> ev.emit(...)
+//       });
+
+//       break;
+//     }
+//   }
+
+//   // when nothing matched
+//   // ...
+// });
+
+// // // event when socket connected in 'bus' namespace
+//  ev.on('socket.connection route.bus', function (s) {
+//     s.on('tracking-bus',function(data){
+//       var ns = url.parse(s.handshake.url, true).query.ns;
+//       io.of(ns).emit('push-tracking', data);
+//     });
+//    console.log('route[bus] connecting..');
+//  });
+
+//  ev.on('socket.disconnect route.bus', function () {
+//    console.log('route[bus] disconnect !!!!');
+//  });
+
+
+// // // event when socket connected in 'default' namespace
+//  ev.on('socket.connection route.default', function () {
+//   console.log('route[default] connecting..');
+// });
+
+// /***********/
+
+// // io.sockets.on('connection', function (socket) {
+// //   socket.on('receive-bus-id',function(data){
+// //     //console.log(data);
+// //     //socket.emit('bus-id',data);
+// //     socket.broadcast.emit('bus-id',data);
+// //   });
+
+
+// // });
+
+// // io.sockets.on('connection', function (socket) {
+  
+// //   console.log("socket connected");
+
+// //   var nsp = io.of('http://localhost:3100/bus');
+// //   nsp.on('connection',function(socket){
+// //     console.log("socket connected");
+// //   });
+// // });
+
+
+
+
+
+
+
+
+
+/***  socket rooms implementation ****/
 io.sockets.on('connection', function (socket) {
 
-  // extract namespace from connected url query param 'ns'
-  var ns = url.parse(socket.handshake.url, true).query.ns;
-  //console.log('connected ns: '+ns)
+    // join to room and save the room name
+    //room = bus-:busId
+    socket.on('join-room', function (room) {
+        socket.room = room;
+        socket.join(room);
+        //console.log('user joined room = ' + room); 
+    })
 
-  //
-  for (var k in routes) {
-    var routeName = k;
-    var routeRegexp = new RegExp(routes[k]);
+    
+    socket.on('bus-data', function(data) {
 
-    // if connected ns matched with route regexp
-    if (ns.match(routeRegexp)) {
-      //console.log('matched: '+routeName)
+        //console.log("Client data: " + data);
+        //console.log(socket.room);
 
-      // create new namespace (or use previously created)
-      io.of(ns).on('connection', function (socket) {
-        
-        // fire event when socket connecting
-        ev.emit('socket.connection route.'+routeName, socket);
-        
-        socket.on('tracking-bus',function(data){
-          
-          //console.log(data);
-          io.of(ns).emit('push-tracking', data);
-          //io.emit('push-tracking',data);
-        });
+        // lookup room and broadcast to that room
+        //socket.get('room', function(err, room) {
+            //room example - https://github.com/learnboost/socket.io
+            // neither method works for me
+            socket.broadcast.to(socket.room).emit('bus-location',data);
+            //io.sockets.in(socket.room).emit('bus-location',data);
+            
+        //});
+    });
 
-        socket.on('disconnect', function(){
-          console.log('user disconnected');
-        });
-        // @todo: add more if needed
-        // on('message') -> ev.emit(...)
-      });
 
-      break;
-    }
-  }
+    socket.on("disconnect",function(){
+      console.log("user disconnected !!!!!!");
+      socket.leave(socket.room);
+    });
 
-  // when nothing matched
-  // ...
-});
 
-// // event when socket connected in 'bus' namespace
- ev.on('socket.connection route.bus', function () {
-   console.log('route[bus] connecting..');
- });
-
-// // event when socket connected in 'default' namespace
- ev.on('socket.connection route.default', function () {
-  console.log('route[default] connecting..');
 });
 
 /***********/
 
-// io.sockets.on('connection', function (socket) {
-//   socket.on('receive-bus-id',function(data){
-//     //console.log(data);
-//     //socket.emit('bus-id',data);
-//     socket.broadcast.emit('bus-id',data);
-//   });
 
 
-// });
 
-// io.sockets.on('connection', function (socket) {
-  
-//   console.log("socket connected");
 
-//   var nsp = io.of('http://localhost:3100/bus');
-//   nsp.on('connection',function(socket){
-//     console.log("socket connected");
-//   });
-// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 console.log('Server listening on http://localhost:' + port);
