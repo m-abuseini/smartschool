@@ -844,7 +844,10 @@ var requestHandler = (function() {
         "addDropPoint" : "api/drop_points/add",
         "addPickupPoint" : "api/pickup_points/add",
         "getTrip": "api/trips/gettrip",
-        "toggleTrip": "api/trips/toggleactivationtrip"
+        "toggleTrip": "api/trips/toggleactivationtrip",
+        "modifyDeviceId": "api/gcm/modifydeviceid",
+        "notifyParent": "api/gcm/notifyparent",
+        "getStudentById": "api/students/getspecificstudentbyid"
     };
     
     var sendRequest = function(payload, headers ,sCallback, fCallback, arg) {
@@ -950,7 +953,7 @@ var login = {
 			alert("all fields should have data");
 			return;
 		}
-		payload.email = emailField;
+		payload.login = emailField;
 		payload.password = passwordField;
 		payload = JSON.stringify(payload);
 		//service, method, sCallback, fCallback, payload, headers, arg
@@ -961,8 +964,13 @@ var login = {
 		console.log(response);
 		storage.storeItem('token', JSON.stringify(response.token));
 		storage.storeItem('user', JSON.stringify(response.user));
+		storage.storeItem('user_type', response.user_type);
 		//getPath.redirectTo("map");
 		//res.redirect("/map");
+
+		window.location = "map";
+		return;
+
 		jQuery(".container").empty();
 		switch(response.user_type){
 			case "1":
@@ -987,6 +995,7 @@ var parent = {
 
 	init: function(){
 		parent.drawChildrenInfo();
+		parent.addingTestAnchor();
 	},
 
 	bindButtonsAction: function(){
@@ -1014,18 +1023,47 @@ var parent = {
 		var childrenList = jQuery("<ul>").addClass("childrenList");
 		for(var i=0;i<childrenObj.length;i++){
 			var childrenItem = jQuery("<li>").attr({"child-address":childrenObj[i].address,"child-id":childrenObj[i].child_id,"class": "childItem"});
-			childrenItem.append(jQuery("<a>").attr({"href":"javascript:;","class":"childItemAnchor"}).html(childrenObj[i].full_name));
+			childrenItem.append(jQuery("<a>").attr({"href":"javascript:;","class":"childItemAnchor"}).html(childrenObj[i].first_name));
 			childrenList.append(childrenItem);
 		}
 		jQuery(".container").append(childrenList);
 		jQuery(".container").append(jQuery("<div>").addClass("childInfo"));
 		parent.bindButtonsAction();
-	}
+	},
+
+	addingTestAnchor: function(){
+		var anchorItem;
+
+		anchorItem = jQuery("<a>").attr({"id":"#testData"}).html("Test - check Log");
+		jQuery(".container").append(anchorItem);
+
+		parent.bindTestAnchor();
+	},
+
+	bindTestAnchor: function(){
+		jQuery(".container").on("click","#testData",function(e){
+			e.preventDefault();
+			parent.testingData();
+		});
+	},
+
+	testingData: function(){
+
+		var headers = {},
+			payload = 'id=56f82a8a2b5efdcda7dc0a79';
+			//getspecificstudentbyid
+		requestHandler.sendRequest('getStudentById','GET',parent.testingDataSuccess,parent.testingDataFail, payload, headers);
+	},
+
+	testingDataSuccess: function(response){console.log(response);},
+	testingDataFail: function(response){console.log(response);}
+
 };
 
 
 var child = {
 	getAddress: function(address_id, child_id){
+		address_id = address_id.replace(/\s/g, '');
 		var payload = 'id='+address_id,
 			headers = {},
 			arg = child_id;
@@ -1423,7 +1461,8 @@ var child = {
   //      		resource: "socket.io",
   //   	});
 
-	
+		
+		/** old namespace socket.io implementation 
 		window.socket = io('http://localhost:3100/bus/'+busId,{
 			query: 'ns=/bus/'+busId+'&token='+JSON.parse(storage.fetchItem("token")),
 			resource: "socket.io"
@@ -1437,7 +1476,27 @@ var child = {
     		//console.log("data recieved from server");
     		console.log(data);
     	});
+
+    	window.socket.on('disconnect',function(socket){
+			window.socket.emit("reciever-disconnected","push-tracking");
+		});
+		*/
+
+
+		var roomName = 'bus-'+busId;
 		
+		console.log("room name = "+ roomName);
+
+		window.socket = io('http://zlious.com');
+
+		window.socket.on('connect',function(socket){
+			console.log("user connecting to socket");
+			window.socket.emit('join-room',roomName);
+		});
+
+		window.socket.on('bus-location',function(data){
+			console.log(data);
+		});
 	}
 
 }
@@ -1457,7 +1516,8 @@ var bus = {
 			e.preventDefault();
 			var _this = e.target;
 			var tripId = _this.getAttribute("ref-id");
-			bus.getTrip(tripId);
+			bus.addTripControllers(tripId);
+			//bus.getTrip(tripId);
 		});
 
 		jQuery('.container').on('click','.trip-container .toggle_trip_active_status',function(e){
@@ -1466,6 +1526,15 @@ var bus = {
 			var tripId = _this.getAttribute('trip_id');
 
 			bus.toggleTripStatus(tripId);
+		});
+
+		//test_socket_for_bus
+		jQuery('.container').on('click','.trip-container .test_socket_for_bus',function(e){
+			e.preventDefault();
+			var _this = e.target;
+			var bus_id = _this.getAttribute('bus_id');
+
+			bus.testSocket(bus_id);
 		});
 	},
 
@@ -1495,7 +1564,17 @@ var bus = {
 		jQuery(".container").append(tripsContainer);
 	},
 
+
+	addTripControllers: function(tripID){
+		var buttonsContainer = jQuery("<div>").addClass("tripActions"),
+			addStudentButton = jQuery("<a>").attr({"href":"javascript:;","class":"addStudentLocation"}).html("add student Location"),
+			showPointsOnMap = jQuery("<a>").attr({"href":"javascript:;","class":"showPointsOnMap"}).html("show Points on map");
+
+			//mseini
+	},
+
 	getTrip: function(tripId){
+		//var tripId = "56f90f4b2b5efdcda7dc0caa";
 		var payload = 'id='+tripId,
 			headers = {};
 		//service, method, sCallback, fCallback, payload, headers, arg
@@ -1569,6 +1648,10 @@ var bus = {
 		item6.append(jQuery("<a>").attr({'href':'javascript:;','class':'toggle_trip_active_status','trip_id':tripObj._id}).html("toggle activation"));
 		tripRecord.append(item6);
 
+		var item7 = jQuery("<div>");
+		item7.append(jQuery("<a>").attr({'href':'javascript:;','class':'test_socket_for_bus','bus_id':tripObj.bus}).html("bus socket"));
+		tripRecord.append(item7);
+
 		jQuery(".container").append(tripRecord);
 
 	},
@@ -1593,14 +1676,97 @@ var bus = {
 	},
 	toggleTripStatusFail: function(response){
 		console.log(response);
+	},
+
+	testSocket: function(bus_id){
+
+
+		/******* 
+		
+		Dyanamic socket namespace implementation
+
+		window.socket = io('http://localhost:3100/bus/'+bus_id,{
+			query: 'ns=/bus/'+bus_id+'&token='+JSON.parse(storage.fetchItem("token")),
+			resource: "socket.io"
+		});
+
+		window.socket.on('connection',function(socket){
+			console.log("bus socket ready");
+		});
+
+		window.socket.on('disconnect',function(socket){
+			console.log("sender-disconnected");
+			socket.emit("sender-disconnected","push-tracking");
+		});
+
+		*/
+
+
+		var roomName = 'bus-'+bus_id;
+		
+		console.log("room name = "+ roomName);
+
+		window.socket = io('http://zlious.com');
+
+		window.socket.on('connect',function(socket){
+
+			console.log("user connecting to socket");
+			
+			window.socket.emit('join-room',roomName);
+		
+		});
+
+		// window.socket.on('bus-location',function(data){
+		// 	console.log(data);
+		// });
+
+		var iFrequency = 5000; // expressed in miliseconds
+		var myInterval = 0;
+
+		// STARTS and Resets the loop if any
+		function startLoop() {
+		    if(myInterval > 0) clearInterval(myInterval);  // stop
+		    myInterval = setInterval( "doSomething('"+bus_id+"')", iFrequency );  // run
+		}
+
+		startLoop();
+
+
 	}
 }
 
 
 
 
-var testFunc = function(){
+
+
+var school = {
+	init: function(){
+		school.drawSchoolActions();
+	},
+
+	drawSchoolActions: function(){
+		
+	}
+}
+
+var i=0;
+function doSomething(bus_id){
+	console.log(bus_id+"---"+i);
 	
+    window.socket.emit('bus-data',bus_id+"---"+i++);
+}
+
+
+var testFunc = function(){
+	var payload = {},
+		headers = {};
+
+		payload.id = "5662e19d84001efc680a1822";
+		payload.message = "mahmoud 2"
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('notifyParent','POST',testFuncSuccess,testFuncFail, payload, headers);
 }
 function testFuncSuccess(res){
 	console.log(res);
@@ -1608,6 +1774,31 @@ function testFuncSuccess(res){
 function testFuncFail(res){
 	console.log(res);
 }
+
+
+var testFunc2 = function(){
+	var payload = {},
+		headers = {};
+
+		payload.id = "5662e5ef591f97106f69d336";
+		payload.device_id = "f7HZlCKJtnY:APA91bH-Wd4yQtGivcnzcfluaUfIQZMH42bRrjK_ZUiyqUiApn4fRmJAPGKKDa1KdUDq-X9oX1gT1sduEvMQogESjoapBSF9TYVMRN8b1Y5oeS3jQde0ha7BXJIfDL1rDGWJlBhaoBI-";
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('modifyDeviceId','POST',testFuncSuccess,testFuncFail, payload, headers);
+}
+
+
+var testFuck3 = function(){
+	var payload = {},
+		headers = {};
+
+		payload.id = "5662e5ef591f97106f69d336";
+		payload.device_id = "f7HZlCKJtnY:APA91bH-Wd4yQtGivcnzcfluaUfIQZMH42bRrjK_ZUiyqUiApn4fRmJAPGKKDa1KdUDq-X9oX1gT1sduEvMQogESjoapBSF9TYVMRN8b1Y5oeS3jQde0ha7BXJIfDL1rDGWJlBhaoBI-";
+		payload = JSON.stringify(payload);
+		//service, method, sCallback, fCallback, payload, headers, arg
+		requestHandler.sendRequest('modifyDeviceId','POST',testFuncSuccess,testFuncFail, payload, headers);
+}
+
 
 
 jQuery(document).ready(function(){

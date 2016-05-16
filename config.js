@@ -4,7 +4,8 @@ module.exports = {
     "user_type":{
     	1: "parent",
     	2: "student",
-    	3: "bus"
+    	3: "bus",
+    	4: "school"
     }
 };
 

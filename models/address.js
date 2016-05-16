@@ -11,6 +11,8 @@ module.exports = mongoose.model('Address', new Schema({
 }));
 
 
+
+
 // static_address: {
 // name: "home",
 // 	province_id: "address_province_id",

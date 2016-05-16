@@ -7,7 +7,7 @@ module.exports = mongoose.model('Parent', new Schema({
   personal_documents:  Array,
   first_name:   String,
   middle_name: String,
-  lastname:   String,
+  last_name:   String,
   place_of_birth:   String,
   date_of_birth:  String,
   religion:   String,
@@ -20,7 +20,7 @@ module.exports = mongoose.model('Parent', new Schema({
   education_level: String,
   work:   String,
   family_members_count: String,
-  phone:  String,
+  phone_number:  String,
   email: String,
   device_id: String
 }));
@@ -29,6 +29,15 @@ module.exports = mongoose.model('Parent', new Schema({
 // children:  [{
 //       child_id : String,
 //       full_name: String,
+//       class: String,
+//       address: String,
+//       schhold_id: String
+//     },.....]
+
+
+// children:  [{
+//       child_id : String,
+//       first_name: String,
 //       class: String,
 //       address: String,
 //       schhold_id: String

@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var Parent   = require('../models/parent');
 var User = require('../models/user');
+var Student = require('../models/student');
 var app = express();
 
 /**
@@ -99,6 +100,127 @@ router.get('/list',function(req,res){
 // });
 
 
+
+router.post('/allParents',function(req,res){
+	Parent.find(function(err,parents){
+		if(parents){
+			for(parent in parents){
+
+				/***
+				************ Change the Value of children in Parent Collection into array and keep the values *********
+
+				var oldChildrenValue = parents[parent].children;
+				parents[parent].children = [];
+
+				for(var j=0;j<oldChildrenValue.length;j++){
+					parents[parent].children.push(oldChildrenValue[j]);
+				}
+				parents[parent].save(function(err){
+					if(err){
+						console.log(err);	
+					}
+				});
+
+				***/
+
+				/*************************
+				***************************** add parent ID to each corresponding student */
+
+				var children = parents[parent].children;
+
+				addParentIdToChildren(children,parents[parent]._id);
+				
+				//console.log(parents[parent]._id);
+				// for(child in children){
+				// 	console.log(parents[parent]._id);
+				// 	Student.findOne({_id: children[child].child_id},function(err,student){
+				// 		if(student){
+				// 			//if(student.parents == null){
+				// 				student.parents = [];	
+				// 			//}
+				// 			student.parents.push(parents[parent]._id);
+
+				// 			student.save(function(err){
+				// 				if(err){
+				// 					console.log(err);
+				// 				}
+				// 			});
+				// 		}
+						
+				// 	});
+				// }
+
+				/**************/
+
+
+				// if(parents[parent].phone_number != null){
+
+				// 	var newuser = new User({
+				// 	    name: parents[parent].first_name, 
+				// 		password: "123", 
+				// 		type: 1,
+				// 		refid: parents[parent]._id,
+				// 		email: parents[parent].email,
+				// 		phone_number: parents[parent].phone_number
+				// 	  });
+				// 	  newuser.save(function(err){
+				// 	    if(err) {
+				// 	    	console.log(err);
+				// 	    };
+
+				// 	    //console.log("user added");
+				// 	    //res.json({success: true});
+				// 	  });
+				// }else{
+				// 	console.log(parents[parent]._id);
+				// }
+				
+
+				
+				//console.log(parents[parent].children);
+				//console.log(parents[parent].children.length);
+				//console.log(parents[parent].children.constructor);
+				// if(parents[parent].children.constructor == Array){
+				// 	//console.log("Array obj");
+				// }
+				// if(parents[parent].children.constructor == Object){
+				// 	console.log("Object obj");
+				// }
+			}
+			
+			res.json({success: true});
+		}
+	});
+});
+
+
+var addParentIdToChildren = function(children,parentId){
+	for(child in children){
+		Student.findOne({_id: children[child].child_id},function(err,student){
+			if(student){
+				//if(student.parents == null){
+					student.parents = [];	
+				//}
+				student.parents.push(parentId);
+
+				student.save(function(err){
+					if(err){
+						console.log(err);
+					}
+				});
+			}
+			
+		});
+	}
+}
+
+
+var encryptPassword = function(password) {
+    // if (!password || !this.salt) return '';
+    // var salt = new Buffer(this.salt, 'base64');
+    var salt = "smartSchool_Mseini86593910";
+    return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+ }
 
 
 /*

@@ -8,7 +8,7 @@ module.exports = mongoose.model('Student', new Schema({
   personal_documents:  Array,
   first_name:   String,
   middle_name: String,
-  lastname:   String,
+  last_name:   String,
   place_of_birth:   String,
   date_of_birth:  String,
   religion:   String,
@@ -30,7 +30,7 @@ module.exports = mongoose.model('Student', new Schema({
   class: String,
   section: String,
   educational_documents: Array,
-  phone:  String,
+  phone_number:  String,
   email: String,
   device_id: String
 }));

@@ -9,7 +9,8 @@ var UserSchema = new Schema({
     hashedPassword: String, 
     type: String,
     refid: String,
-    email: String 
+    email: String,
+    phone_number: String
 });
 
 
@@ -18,7 +19,7 @@ UserSchema
 	.virtual('password')
 	.set(function(password) {
     	//this.password = password;
-    	this.salt = this.makeSalt();
+    	//this.salt = this.makeSalt();
     	this.hashedPassword = encryptPassword(password);
   	})
   	.get(function() {

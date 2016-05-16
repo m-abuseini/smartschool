@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Pickup_point = require('../models/pickup_point');
 var Address = require('../models/address');
-
+var Trip = require('../models/trip');
 
 /**
 * GET addresslist
@@ -59,45 +59,100 @@ router.get('/list',function(req,res){
 // });
 
 
-
 /*
 * Post to add address
 */
 router.post('/add',function(req,res){
+	var student_id = req.body.student_id,
+		address_id = req.body.address_id,
+		trip_id    = req.body.trip_id,
+		latitude   = req.body.latitude,
+		longitude  = req.body.longitude;
 
-	var newpickup_point = new Pickup_point({
-		name: req.body.name,
-		student_id: req.body.student_id,
-		province_id: req.body.province_id,
-		street_name: req.body.street_name,
-		building_number: req.body.building_number,
-		appartment_number: req.body.appartment_number,
-		latitude : req.body.latitude,
-		longitude: req.body.longitude,
-		primary: req.body.primary
-	});
-	newpickup_point.save(function(err,pickPoint){
-    if(err) throw err;
+	if(student_id == null || student_id == undefined
+	  	|| address_id == null || address_id == undefined
+		|| trip_id == null || trip_id == undefined
+		|| latitude == null || latitude == undefined
+		|| longitude == null || longitude == undefined){
+		res.json({success: false, message: "error : one or more of the core fields are empty"});
+	}else{
 
-    	Address.findById(req.body.address_id,function(err,address){
-    		if(err) throw err;
-    		var pickPointPointObj = {
-    								name: pickPoint.name,
-    								pickup_point_id: pickPoint._id,
-    								primary : pickPoint.primary
-    							};
-    		address.pickup_points.push(pickPointPointObj);
-
-    		address.save(function(err){
-    			if(err) throw err;
-
-    			console.log("pickup_point Added ");
-	    		res.json({success: true, message: "pickup_point added successfully"});
-    		});
-    	});
-	    
-  	});
+		var newpickup_point = new Pickup_point({
+			name: req.body.name != null || req.body.name != undefined ? req.body.name : "مكان الصعود" ,
+			student_id: req.body.student_id,
+			province_id: req.body.province_id,
+			street_name: req.body.street_name,
+			building_number: req.body.building_number,
+			appartment_number: req.body.appartment_number,
+			latitude : req.body.latitude,
+			longitude: req.body.longitude,
+			primary: req.body.primary == undefined ? true : req.body.primary,
+			trip_id: trip_id
+		});
+		newpickup_point.save(function(err,pickPoint){
+		    if(err) {
+		    	console.log(err);
+		    } else{
+		    	addPointToAddress(req,res,pickPoint);
+		    }
+		});
+	}
 });
+
+
+
+var addPointToAddress = function(req,res,pickPoint){
+	var address_id = req.body.address_id;
+
+	Address.findById(req.body.address_id,function(err,address){
+		if(err) throw err;
+		var pickPointPointObj = {
+								name: pickPoint.name,
+								pickup_point_id: pickPoint._id,
+								primary : pickPoint.primary
+							};
+
+		//if(address.pickup_points == null){
+			address.pickup_points = [];
+		//}
+		address.pickup_points.push(pickPointPointObj);
+
+		address.save(function(err){
+			if(err) { 
+				console.log(err);
+			}else{
+				addPointToTrip(req,res,pickPoint,pickPointPointObj,address);
+			}
+		});
+	});
+}
+
+var addPointToTrip = function(req,res,pickPoint,pickPointPointObj,address){
+	var trip_id = req.body.trip_id;
+	Trip.findById(trip_id,function(err,trip){
+						
+		pickPointPointObj.latitude = req.body.latitude;
+		pickPointPointObj.longitude = req.body.longitude;
+		
+		if(trip.pickup_points == null){
+			trip.pickup_points = [];
+		}
+
+		trip.pickup_points.push(pickPointPointObj);
+
+		trip.save(function(err,trip){
+			res.json({success: true, message: "pickup_point added successfully","trip": trip});
+		});
+	});
+}
+
+
+
+
+
+
+
+
 
 /*
 * DELETE to deleteaddress

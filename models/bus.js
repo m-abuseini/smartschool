@@ -3,13 +3,14 @@ var Schema = mongoose.Schema;
 
 module.exports = mongoose.model('Bus', new Schema({ 
   language:   String,
-  number: String,
+  bus_number: String,
   bus_driver: {},
   bus_details: {},
   trips: Array,
   school_id: String,
   location: {},
-  email: String
+  email: String,
+  phone_number: String
 }));
 
 

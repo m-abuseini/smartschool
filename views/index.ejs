@@ -1,0 +1,97 @@
+doctype html
+html
+  head
+    title
+      | SMARTSCHOOL - Coming Soon
+    style.
+      html, body, div, span, applet, object, iframe,
+      h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+      a, abbr, acronym, address, big, cite, code,
+      del, dfn, em, img, ins, kbd, q, s, samp,
+      small, strike, strong, sub, sup, tt, var,
+      b, u, i, center,
+      dl, dt, dd, ol, ul, li,
+      fieldset, form, label, legend,
+      table, caption, tbody, tfoot, thead, tr, th, td,
+      article, aside, canvas, details, embed,
+      figure, figcaption, footer, header, hgroup,
+      menu, nav, output, ruby, section, summary,
+      time, mark, audio, video {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline;
+      }
+      /* HTML5 display-role reset for older browsers */
+      article, aside, details, figcaption, figure,
+      footer, header, hgroup, menu, nav, section {
+      display: block;
+      }
+      body {
+      line-height: 1;
+      }
+      ol, ul {
+      list-style: none;
+      }
+      blockquote, q {
+      quotes: none;
+      }
+      blockquote:before, blockquote:after,
+      q:before, q:after {
+      content: '';
+      content: none;
+      }
+      table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      }
+      body,html{
+      width: 100%;
+      height: 100%;
+      }
+      .wrapper {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      }
+      .radial-center {
+      /* fallback */
+      background-color: #57c2ec;
+      background-image: url(images/bg.jpg);
+      background-position: center center;
+      background-repeat: no-repeat;
+      /* Safari 4-5, Chrome 1-9 */
+      /* Can't specify a percentage size? Laaaaaame. */
+      background: -webkit-gradient(radial, center center, 0, center center, 460, from(#8dc4e3), to(#57c2ec));
+      /* Safari 5.1+, Chrome 10+ */
+      background: -webkit-radial-gradient(circle, #8dc4e3, #57c2ec);
+      /* Firefox 3.6+ */
+      background: -moz-radial-gradient(circle, #8dc4e3, #57c2ec);
+      /* IE 10 */
+      background: -ms-radial-gradient(circle, #8dc4e3, #57c2ec);
+      /* Opera couldn't do radial gradients, then at some point they started supporting the -webkit- syntax, how it kinda does but it's kinda broken (doesn't do sizing) */
+      }
+      .content{
+      margin: 0 auto;
+      background: url(images/coming-soon/circles.png) transparent bottom center no-repeat;
+      width: 100%;height: 100%;
+      text-align: center;
+      }
+      .main-content{
+      width: 495px;
+      margin: 0px auto 0;
+      padding: 60px 0 0;
+      }
+      .main-content img{display: block;}
+      .main-content img.logo{margin: 0 auto 40px;}
+      .main-content img.wait{margin: 0 auto 40px;}
+      .main-content img.bus{margin: 0 auto;}
+  body
+    .wrapper.radial-center
+      .content
+        .main-content
+          img.logo(src='images/coming-soon/smart-school-logo.png')
+          img.wait(src='images/coming-soon/wait-text.png')
+          img.bus(src='images/coming-soon/bus.png')

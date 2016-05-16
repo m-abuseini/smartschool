@@ -153,4 +153,68 @@ router.post('/update',function(req,res){
 });
 
 
+
+// bus model
+  // language:   String,
+  // bus_number: String,
+  // bus_driver: {},
+  // bus_details: {},
+  // trips: Array,
+  // school_id: String,
+  // location: {},
+  // email: String,
+  // phone_number: String
+// ----------------------------------------------------
+
+// //user model 
+// 		name: String, 
+//     password: String, 
+//     type: String,
+//     refid: String,
+//     email: String,
+//     phone_number: String
+
+  // router.post('/add',function(req,res){
+  // 	var phone_number = req.body.phone_number,
+  // 		email = req.body.email,
+  // 		bus_number = req.body.bus_number,
+  // 		school_id = req.body.school_id;
+  // 	if((phone_number != undefined && phone_number != null || email != undefined && email != null)
+  // 		|| bus_number != undefined && bus_number != null
+  // 		|| school_id != undefined && school_id != null){
+		
+		// var newbus = new Bus({
+		// 	// add atributes
+
+
+		// 	newbus.save({
+
+		// 		//if no errors continue
+		// 		// var newuser = new User({
+		// // 	    name: newBus.number, 
+		// // 		password: "123", 
+		// // 		type: 3,
+		// // 		refid: newBus._id,
+		// // 		email: newBus.email
+		// // 	  });
+		// // 	  newuser.save(function(err){
+		// // 	    if(err) throw err;
+
+		// // 	    console.log("newBus added");
+		// // 	    res.json({success: true,bus: newBus});
+		// // 	  });
+		// 	});
+		// });
+
+  // 	}else{
+  // 		res.json({success: false,message: "one of the core params are empty or undefined"});
+  // 	}
+
+  // });
+
+
+
+
+
+
 module.exports = router;

@@ -3,6 +3,7 @@ var router  = express.Router();
 var User    = require('../models/user');
 var Parent  = require('../models/parent');
 var Student = require('../models/student');
+var School = require('../models/school');
 var Bus 	= require('../models/bus');
 var jwt     = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var app     = express();
@@ -14,13 +15,13 @@ var crypto = require('crypto');
 
 /* GET login Page */
 router.get('/', function(req, res, next) {
-  res.render('login', { title: 'SMARTSCHOOl - Login' });
+  res.render('pages/login', { title: 'SMARTSCHOOl - Login' });
   //res.render("../views/index.html");
 });
 
 router.post('/',function(req, res){
 	User.findOne({
-		email : req.body.email
+		$or: [{email: req.body.login},{phone_number: req.body.login}]
 	},function(err,user){
 		if(err) throw err;
 		if(!user){
@@ -38,13 +39,18 @@ router.post('/',function(req, res){
 						Parent.findOne({_id:user.refid}, function(err,parent){
 							if(err) throw err;
 							//res.render("map");
-							res.json({
-								success: true,
-								message: 'success',
-								token: token,
-								user: parent,
-								user_type: user.type
+							parent.device_id = req.body.device_id;
+							parent.save(function(err){
+								if(err) throw err;
+								res.json({
+									success: true,
+									message: 'success',
+									token: token,
+									user: parent,
+									user_type: user.type
+								});
 							});
+							
 						});
 						//res.end();
 						break;
@@ -71,6 +77,20 @@ router.post('/',function(req, res){
 								message: 'success',
 								token: token,
 								user: bus,
+								user_type: user.type
+							});
+						});
+						break;
+
+					case "4":
+						School.findOne({_id: user.refid},function(err,school){
+							if (err) throw err;
+
+							res.json({
+								success: true,
+								message: 'success',
+								token: token,
+								user: school,
 								user_type: user.type
 							});
 						});

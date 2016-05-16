@@ -1,0 +1,49 @@
+ <% include ../partials/html-head %>
+
+<div id="wrapper">
+  <div id="userContainer"></div>
+  <div id="mapContainer"></div>
+  <div class="container"></div>
+  <div id="markers-with-index"></div>
+  <div id="markers-with-coordinates"></div>
+</div>
+
+<script src="/javascripts/gmaps.js"></script>
+<script src="/javascripts/mapManipulation.js"></script>
+<script type="text/html" id="edit_marker_template">
+    <h4>Edit Marker</h4>
+    <form class="edit_marker" action="#" method="post" data-marker-index="{{index}}">
+      <p>
+        <label for="marker_{{index}}_lat">Latitude:</label>
+        <input type="text" id="marker_{{index}}_lat" value="{{lat}}" />
+      </p>
+      <p>
+        <label for="marker_{{index}}_lng">Longitude:</label>
+        <input type="text" id="marker_{{index}}_lng" value="{{lng}}" />
+      </p>
+      <input type="submit" value="Update position" />
+    </form>
+</script>
+
+<script>
+  /*var createMap = function(){
+  map = new GMaps({
+    div: '#mapContainer',
+    zoom: 16,
+    lat: 31.978467043996375,
+    lng: 35.890319645404816,
+    click: function(e) {
+      //alert('click');
+      console.log(e);
+    },
+    dragend: function(e) {
+      alert('dragend');
+    }
+  });
+  };
+  jQuery(document).ready(function(){createMap()}); */
+</script>
+
+
+
+  <% include ../partials/html-footer %>

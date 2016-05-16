@@ -4,14 +4,14 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('smartschool:server');
 var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
-
+console.log(app);
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 

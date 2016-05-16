@@ -159,7 +159,7 @@ router.post('/toggleactivationtrip',function(req,res){
 			trip.save(function(err){
 				if (err) throw err;
 
-				if(activeTrip){
+				if(!activeTrip){
 					res.json({success: true,message: "trip activated",active: true});
 				}else{
 					res.json({success: true,message: "trip deactivated",active: false});

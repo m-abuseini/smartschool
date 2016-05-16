@@ -1,0 +1,2 @@
+// node how to delpoy on linux
+https://certsimple.com/blog/deploy-node-on-linux#node-linux-service-systemd

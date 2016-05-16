@@ -15,59 +15,60 @@ router.get('/list',function(req,res){
 	});
 });
 
-// router.get('/setup',function(req,res){
-//   var newStudent = new Student({
-// 	language:   "1",
-// 	national_id: "1",
-// 	photo: "photo_url",
-// 	personal_documents:  ["id_1",'id_2'],
-// 	first_name:   'work student',
-// 	middle_name: 'student',
-// 	lastname:   'student',
-// 	place_of_birth: "amman jordan",
-// 	date_of_birth:  "new Date",
-// 	religion:   "1",
-// 	nationality: "1",
-// 	gender: "1",
-// 	address: "5662dd21b93eb6f4677a106e",
-// 	parents:  [],
-// 	roles:   ["id_1",'id_2'],
-// 	order_in_family: "1",
-// 	health_status: "1",
-// 	education_status: "1",
-// 	failure_reasons: "1",
-// 	financial_aid_type: "1",
-// 	family_income: "1",
-// 	relief_card_status: "1",
-// 	social_status: "1",
-// 	family_members_count:  "1",
-// 	school: "school_id_1",
-// 	class: "class_id_1",
-// 	section: "section_is_1",
-// 	educational_documents: ["id_1",'id_2'],
-// 	phone:   "1",
-// 	email: "student2@zlious.com",
-// 	device_id: "student-device_id"
-//   });
+router.post('/add',function(req,res){
 
-//   newStudent.save(function(err){
-//     if(err) throw err;
+  var newStudent = new Student({
+	language:   "1",
+	national_id: "1",
+	photo: "photo_url",
+	personal_documents:  ["id_1",'id_2'],
+	first_name:   req.body.name,
+	middle_name: 'student',
+	lastname:   'student',
+	place_of_birth: "amman jordan",
+	date_of_birth:  "new Date",
+	religion:   "1",
+	nationality: "1",
+	gender: "1",
+	address: "5662dd21b93eb6f4677a106e",
+	parents:  [],
+	roles:   ["id_1",'id_2'],
+	order_in_family: "1",
+	health_status: "1",
+	education_status: "1",
+	failure_reasons: "1",
+	financial_aid_type: "1",
+	family_income: "1",
+	relief_card_status: "1",
+	social_status: "1",
+	family_members_count:  "1",
+	school: "school_id_1",
+	class: "class_id_1",
+	section: "section_is_1",
+	educational_documents: ["id_1",'id_2'],
+	phone:   "1",
+	email: "student2@zlious.com",
+	device_id: "student-device_id"
+  });
 
-//     var newuser = new User({
-// 	    name: newStudent.first_name, 
-// 		password: "123", 
-// 		type: 2,
-// 		refid: newStudent._id,
-// 		email: newStudent.email
-// 	  });
-// 	  newuser.save(function(err){
-// 	    if(err) throw err;
+  newStudent.save(function(err){
+    if(err) throw err;
 
-// 	    console.log("user added");
-// 	    res.json({success: true, user: newStudent});
-// 	  });
-//   });
-// });
+    var newuser = new User({
+	    name: newStudent.first_name, 
+		password: "123", 
+		type: 2,
+		refid: newStudent._id,
+		email: newStudent.email
+	  });
+	  newuser.save(function(err){
+	    if(err) throw err;
+
+	    console.log("user added");
+	    res.json({success: true, user: newStudent});
+	  });
+  });
+});
 
 // router.get('/setup',function(req, res){
 // 	// get a user with ID of 1
@@ -118,11 +119,13 @@ router.delete('/delete/:id',function(req,res){
 * GET  specific student by id
 * this will not be used now as all the data is saved on javascript object. on the browser.
 */
-router.get('/getspecificstudentbyid/:id',function(req,res){
+router.get('/getspecificstudentbyid',function(req,res){
 	var db = req.db;
 	var collection = db.get('students');
-	var userToGet = req.params.id;
+	var userToGet = req.query.id;
+	console.log(userToGet);
 	collection.findOne({_id:userToGet},{}, function(e, docs){
+		console.log(docs);
 		res.json(docs);
 	});
 });

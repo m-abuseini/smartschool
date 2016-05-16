@@ -9,7 +9,8 @@ module.exports = mongoose.model('Trip', new Schema({
   type: String,
   pickup_points: Array,
   drop_points: Array,
-  active: Boolean
+  active: Boolean,
+  students: Array
 }));
 
 
@@ -17,7 +18,7 @@ module.exports = mongoose.model('Trip', new Schema({
 // pickup_points,drop_points:[
 // 	{
 // 		name: String,
-// 		pickup_id/drop_id: String,
+// 		pickup_point_id/drop_point_id: String,
 // 		latitude : String,
 //   	longitude: String
 // 	},
@@ -35,3 +36,14 @@ module.exports = mongoose.model('Trip', new Schema({
 //	"drop_points"			: 	["drop_point_id_1","drop_point_id_2"],
 //	"active"				: 	true
 // }
+
+
+// students:[
+// 	{
+// 		student_id:
+// 		first_name:
+// 		last_name:
+// 		address_id:
+// 	},
+
+// ]
